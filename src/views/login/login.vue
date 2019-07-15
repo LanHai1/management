@@ -17,7 +17,12 @@
           <el-input type="password" v-model.trim="ruleForm.pass" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="submitForm('ruleForm')" class="submit">提交</el-button>
+          <el-button
+            type="primary"
+            @click="submitForm('ruleForm')"
+            @keyup.13="submitForm('ruleForm')"
+            class="submit"
+          >提交</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -62,10 +67,12 @@ export default {
             return this.errPrompt(res.data.meta.msg);
           }
           if (res.data.meta.status === 200) {
-            return this.$message({
+            this.$message({
               message: res.data.meta.msg,
               type: "success"
             });
+            this.$router.push("/index");
+            return;
           }
         })
         .catch(err => {

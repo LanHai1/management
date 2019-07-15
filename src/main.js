@@ -18,6 +18,8 @@ Vue.prototype.$axios = axios;
 
 // 登陆组件
 import login from "./views/login/login.vue";
+// 主页内容模块
+import mainContent from "./views/mainContent/mainContent.vue";
 const routes = [
   {
     path: "/",
@@ -25,8 +27,14 @@ const routes = [
     redirect: "/login"
   },
   {
+    // 登陆页面
     path: "/login",
     component: login
+  },
+  {
+    // 主页
+    path: "/index",
+    component: mainContent
   }
 ];
 
