@@ -13,7 +13,7 @@ const routes = [
   {
     path: "/",
     // 重定向
-    redirect: "/login"
+    redirect: "/index"
   },
   {
     // 登陆页面
@@ -23,12 +23,42 @@ const routes = [
   {
     // 主页
     path: "/index",
-    component: mainContent
+    component: mainContent,
+    // 设置路由元信息
+    meta: {
+      isValidation: true
+    }
   }
 ];
 
 const router = new VueRouter({
   routes
+});
+
+// 路由前置守卫
+/**
+ * to:
+ * from:
+ * next
+ */
+
+router.beforeEach((to, from, next) => {
+  // 主页
+  if (to.meta.isValidation) {
+    // 判断本地是否存在token
+    if (window.localStorage.getItem("token")) {
+      next();
+    } else {
+      new Vue().$message({
+        showClose: true,
+        message: "请登陆",
+        type: "warning"
+      });
+      router.push("/login");
+    }
+  } else {
+    next();
+  }
 });
 
 export default router;

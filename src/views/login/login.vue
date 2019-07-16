@@ -78,6 +78,8 @@ export default {
                   message: res.data.meta.msg,
                   type: "success"
                 });
+                // 本地存储 token
+                window.localStorage.setItem("token", res.data.data.token);
                 this.$router.push("/index");
                 return;
               }
