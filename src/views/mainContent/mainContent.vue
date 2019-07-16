@@ -1,6 +1,27 @@
 <template>
-  <el-container class="main">
-    <el-header>Header</el-header>
+  <el-container
+    class="main"
+    v-loading="loading"
+    :element-loading-text="loadingText"
+    element-loading-spinner="el-icon-loading"
+    element-loading-background="rgba(0, 0, 0, 0.8)"
+  >
+    <el-header class="my-header">
+      <el-row>
+        <el-col :span="12">
+          <h1 class="title">电商后台管理系统</h1>
+        </el-col>
+        <el-col :span="12">
+          <i
+            class="el-icon-circle-close icon-close"
+            :class="{'el-icon-error':isColse}"
+            @mouseenter="isColse=true"
+            @mouseleave="isColse=false"
+            @click="logout"
+          ></i>
+        </el-col>
+      </el-row>
+    </el-header>
     <el-container>
       <el-aside width="200px">
         <el-menu :default-openeds="['1', '3']">
@@ -67,7 +88,50 @@
 import { menus } from "../../api/http";
 export default {
   name: "mainContent",
-  mounted() {
+  data() {
+    return {
+      // 退出鼠标移入样式
+      isColse: false,
+      // 加载
+      loading: false,
+      // 加载文字
+      loadingText: ""
+    };
+  },
+  methods: {
+    // 退出
+    logout() {
+      this.$confirm("此操作将退出登陆, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          // 清除token
+          window.localStorage.removeItem("token");
+          // 退出延迟
+          this.loading = true;
+          this.loadingText = "正在退出";
+          window.setTimeout(() => {
+            this.$message({
+              type: "success",
+              message: "退出成功",
+              duration: 2000
+            });
+            // 跳转回登陆页面
+            this.$router.push("/login");
+          }, 2000);
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "取消退出",
+            duration: 1000
+          });
+        });
+    }
+  },
+  created() {
     // 左侧菜单全选
     menus()
       .then(res => {
@@ -80,7 +144,23 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped lang="less">
+.my-header {
+  min-width: 380px;
+  .title {
+    float: left;
+    font-size: 24px;
+    font-weight: 600;
+    margin-left: 50px;
+  }
+  .icon-close {
+    float: right;
+    font-size: 24px;
+    line-height: 60px;
+    margin-right: 50px;
+    cursor: pointer;
+  }
+}
 .el-header,
 .el-footer {
   background-color: #b3c0d1;
