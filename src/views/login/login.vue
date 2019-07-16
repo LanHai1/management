@@ -34,6 +34,8 @@
 </template>
 
 <script>
+// 登陆请求
+import { login } from "../../api/http";
 export default {
   name: "login",
   data() {
@@ -61,11 +63,10 @@ export default {
           const { user, pass } = this.ruleForm;
           // 为空不发请求
           if (!user || !pass) return this.errPrompt("用户名或密码不能为空");
-          this.$axios
-            .post("login", {
-              username: user,
-              password: pass
-            })
+          login({
+            username: user,
+            password: pass
+          })
             .then(res => {
               if (res.data.meta.status === 400) {
                 // 重置用户输入
