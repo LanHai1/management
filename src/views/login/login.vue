@@ -75,10 +75,6 @@ export default {
                 return this.errPrompt(res.data.meta.msg);
               }
               if (res.data.meta.status === 200) {
-                this.$message({
-                  message: res.data.meta.msg,
-                  type: "success"
-                });
                 // 本地存储 token
                 window.localStorage.setItem("token", res.data.data.token);
                 this.$router.push("/index");

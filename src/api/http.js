@@ -46,9 +46,18 @@ http.interceptors.response.use(
         type: "warning"
       });
       // 清楚假token
-      window.localStorage.clear()
+      window.localStorage.clear();
       // 重定向回登陆
       router.push("/login");
+    }
+    // 数据获取成功提示
+    if (response.data.meta.status === 200) {
+      new Vue().$message({
+        showClose: true,
+        message: response.data.meta.msg,
+        type: "success",
+        duration: 1000
+      });
     }
     return response;
   },

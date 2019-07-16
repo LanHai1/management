@@ -24,57 +24,41 @@
     </el-header>
     <el-container>
       <el-aside width="200px">
-        <el-menu :default-openeds="['1', '3']">
-          <el-submenu index="1">
+        <el-menu
+          default-active="2"
+          class="el-menu-vertical-demo my-menu"
+          background-color="#5d666f"
+          text-color="#fff"
+          active-text-color="#ffd04b"
+          :unique-opened="true"
+          :router="true"
+        >
+          <el-submenu v-for="(oneMenu, index) in menuList" :key="index" :index="''+index">
             <template slot="title">
-              <i class="el-icon-message"></i>导航一
+              <span v-if="oneMenu.id === 125">
+                <i class="el-icon-user"></i>
+              </span>
+              <span v-else-if="oneMenu.id === 103">
+                <i class="el-icon-lock"></i>
+              </span>
+              <span v-else-if="oneMenu.id === 101">
+                <i class="el-icon-goods"></i>
+              </span>
+              <span v-else-if="oneMenu.id === 102">
+                <i class="el-icon-shopping-bag-1"></i>
+              </span>
+              <span v-else-if="oneMenu.id === 145">
+                <i class="el-icon-pie-chart"></i>
+              </span>
+              {{oneMenu.authName}}
             </template>
             <el-menu-item-group>
-              <template slot="title">分组一</template>
-              <el-menu-item index="1-1">选项1</el-menu-item>
-              <el-menu-item index="1-2">选项2</el-menu-item>
+              <el-menu-item
+                v-for="(towMenu, index) in oneMenu.children"
+                :key="index"
+                :index="'/index/'+towMenu.path"
+              >{{towMenu.authName}}</el-menu-item>
             </el-menu-item-group>
-            <el-menu-item-group title="分组2">
-              <el-menu-item index="1-3">选项3</el-menu-item>
-            </el-menu-item-group>
-            <el-submenu index="1-4">
-              <template slot="title">选项4</template>
-              <el-menu-item index="1-4-1">选项4-1</el-menu-item>
-            </el-submenu>
-          </el-submenu>
-          <el-submenu index="2">
-            <template slot="title">
-              <i class="el-icon-menu"></i>导航二
-            </template>
-            <el-menu-item-group>
-              <template slot="title">分组一</template>
-              <el-menu-item index="2-1">选项1</el-menu-item>
-              <el-menu-item index="2-2">选项2</el-menu-item>
-            </el-menu-item-group>
-            <el-menu-item-group title="分组2">
-              <el-menu-item index="2-3">选项3</el-menu-item>
-            </el-menu-item-group>
-            <el-submenu index="2-4">
-              <template slot="title">选项4</template>
-              <el-menu-item index="2-4-1">选项4-1</el-menu-item>
-            </el-submenu>
-          </el-submenu>
-          <el-submenu index="3">
-            <template slot="title">
-              <i class="el-icon-setting"></i>导航三
-            </template>
-            <el-menu-item-group>
-              <template slot="title">分组一</template>
-              <el-menu-item index="3-1">选项1</el-menu-item>
-              <el-menu-item index="3-2">选项2</el-menu-item>
-            </el-menu-item-group>
-            <el-menu-item-group title="分组2">
-              <el-menu-item index="3-3">选项3</el-menu-item>
-            </el-menu-item-group>
-            <el-submenu index="3-4">
-              <template slot="title">选项4</template>
-              <el-menu-item index="3-4-1">选项4-1</el-menu-item>
-            </el-submenu>
           </el-submenu>
         </el-menu>
       </el-aside>
@@ -95,7 +79,9 @@ export default {
       // 加载
       loading: false,
       // 加载文字
-      loadingText: ""
+      loadingText: "",
+      // 左边导航列表
+      menuList: []
     };
   },
   methods: {
@@ -120,7 +106,7 @@ export default {
             });
             // 跳转回登陆页面
             this.$router.push("/login");
-          }, 2000);
+          }, 1000);
         })
         .catch(() => {
           this.$message({
@@ -132,10 +118,10 @@ export default {
     }
   },
   created() {
-    // 左侧菜单全选
+    // 左侧菜单
     menus()
       .then(res => {
-        console.log(res);
+        this.menuList = res.data.data;
       })
       .catch(err => {
         console.error(err);
@@ -152,6 +138,7 @@ export default {
     font-size: 24px;
     font-weight: 600;
     margin-left: 50px;
+    color: #fff;
   }
   .icon-close {
     float: right;
@@ -163,25 +150,37 @@ export default {
 }
 .el-header,
 .el-footer {
-  background-color: #b3c0d1;
+  background-color: #618e8e;
   color: #333;
   text-align: center;
   line-height: 60px;
 }
 
 .el-aside {
-  background-color: #d3dce6;
+  background-color: #6f7a85;
   color: #333;
   text-align: center;
 }
 
 .el-main {
-  background-color: #e9eef3;
+  background-color: #618f78;
   color: #333;
   text-align: center;
 }
 
 .main {
   height: 100%;
+}
+
+.my-menu {
+  overflow: hidden;
+}
+
+.el-menu {
+  border-right: 0;
+  list-style: none;
+  position: relative;
+  margin: 0;
+  padding-left: 0;
 }
 </style>
