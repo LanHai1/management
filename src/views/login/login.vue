@@ -10,10 +10,14 @@
         class="demo-ruleForm"
         label-position="top"
       >
-        <el-form-item label="用户名" prop="user" :rules="[{ required: true, message: '姓名不能为空'}]">
+        <el-form-item label="用户名" prop="user" :rules="[{ required: true, message: '用户名不能为空'}]">
           <el-input type="text" v-model.trim="ruleForm.user" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="密码" prop="pass" :rules="[{ required: true, message: '密码不能为空'}]">
+        <el-form-item
+          label="密码"
+          prop="pass"
+          :rules="[{ required: true, message: '密码不能为空'},{ min: 6, max: 11, message: '长度在 6 到 11 个字符', trigger: 'blur' }]"
+        >
           <el-input type="password" v-model.trim="ruleForm.pass" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item>
@@ -50,34 +54,42 @@ export default {
       });
     },
     // 提交数据
-    submitForm() {
-      const { user, pass } = this.ruleForm;
-      // 为空不发请求
-      if (!user || !pass) return this.errPrompt("用户名或密码不能为空");
-      this.$axios
-        .post("login", {
-          username: user,
-          password: pass
-        })
-        .then(res => {
-          if (res.data.meta.status === 400) {
-            // 重置用户输入
-            this.ruleForm.user = "";
-            this.ruleForm.pass = "";
-            return this.errPrompt(res.data.meta.msg);
-          }
-          if (res.data.meta.status === 200) {
-            this.$message({
-              message: res.data.meta.msg,
-              type: "success"
+    submitForm(formName) {
+      this.$refs[formName].validate(valid => {
+        // 饿了么验证规则确定
+        if (valid) {
+          const { user, pass } = this.ruleForm;
+          // 为空不发请求
+          if (!user || !pass) return this.errPrompt("用户名或密码不能为空");
+          this.$axios
+            .post("login", {
+              username: user,
+              password: pass
+            })
+            .then(res => {
+              if (res.data.meta.status === 400) {
+                // 重置用户输入
+                this.ruleForm.user = "";
+                this.ruleForm.pass = "";
+                return this.errPrompt(res.data.meta.msg);
+              }
+              if (res.data.meta.status === 200) {
+                this.$message({
+                  message: res.data.meta.msg,
+                  type: "success"
+                });
+                this.$router.push("/index");
+                return;
+              }
+            })
+            .catch(err => {
+              console.error(err);
             });
-            this.$router.push("/index");
-            return;
-          }
-        })
-        .catch(err => {
-          console.error(err);
-        });
+        } else {
+          this.errPrompt("输入错误,请按规则输入");
+          return false;
+        }
+      });
     }
   }
 };
