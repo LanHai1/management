@@ -5,6 +5,9 @@ import axios from "axios";
 axios.defaults.baseURL = "http://localhost:8888/api/private/v1/";
 Vue.prototype.$axios = axios;
 
+// 导入router
+import router from "../router/router";
+
 // 克隆axios 基地址
 const http = axios.create({
   baseURL: "http://localhost:8888/api/private/v1/"
@@ -31,6 +34,22 @@ http.interceptors.request.use(
 http.interceptors.response.use(
   function(response) {
     // Do something with response data
+    // 处理假token
+    if (
+      response.data.meta.msg == "无效token" &&
+      response.data.meta.status === 400
+    ) {
+      // 提示
+      new Vue().$message({
+        showClose: true,
+        message: "请登陆",
+        type: "warning"
+      });
+      // 清楚假token
+      window.localStorage.clear()
+      // 重定向回登陆
+      router.push("/login");
+    }
     return response;
   },
   function(error) {
@@ -45,4 +64,9 @@ export const login = ({ username, password }) => {
     username,
     password
   });
+};
+
+// 菜单
+export const menus = () => {
+  return http.get("menus");
 };
