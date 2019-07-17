@@ -26,6 +26,7 @@ const routes = [
     // 主页
     path: "/index",
     component: mainContent,
+    redirect: "/index/users",
     // 设置路由元信息
     meta: {
       isValidation: true

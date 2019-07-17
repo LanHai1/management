@@ -27,7 +27,7 @@
         <el-menu
           default-active="2"
           class="el-menu-vertical-demo my-menu"
-          background-color="#5d666f"
+          background-color="#364351"
           text-color="#fff"
           active-text-color="#ffd04b"
           :unique-opened="true"
@@ -163,14 +163,14 @@ export default {
 }
 .el-header,
 .el-footer {
-  background-color: #618e8e;
+  background-color: #668c8c;
   color: #333;
   text-align: center;
   line-height: 60px;
 }
 
 .el-aside {
-  background-color: #6f7a85;
+  background-color: #6a7b8c;
   color: #333;
   text-align: center;
 }
