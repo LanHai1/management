@@ -115,3 +115,8 @@ export const updateUserMsg = ({ id, email, mobile }) => {
     mobile
   });
 };
+
+// 所有权限列表
+export const rights = ({ type }) => {
+  return http.get(`rights/${type}`);
+};
