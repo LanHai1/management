@@ -15,6 +15,8 @@ import users from "../views/users/users.vue";
 import roles from "../views/roles/roles.vue";
 // 权限管理/权限列表组件
 import rights from "../views/rights/rights.vue";
+// 商品列表组件
+import goods from "../views/goods/goods.vue";
 const routes = [
   {
     path: "/",
@@ -51,6 +53,11 @@ const routes = [
       {
         path: "rights",
         component: rights
+      },
+      // 商品管理/商品列表
+      {
+        path: "goods",
+        component: goods
       }
     ]
   }
