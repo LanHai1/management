@@ -38,11 +38,28 @@
           <el-input placeholder="请输入电话" v-model="formLabelAlign.mobile"></el-input>
         </el-form-item>
       </el-form>
-
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="addUser">确 定</el-button>
       </span>
+    </el-dialog>
+    <!-- 修改用户信息 -->
+    <el-dialog title="修改用户" :visible.sync="dialogFormVisible">
+      <el-form :model="form">
+        <el-form-item label="用户名" label-width="120px">
+          <el-input :disabled="true" v-model="form.username" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="邮箱" label-width="120px">
+          <el-input v-model="form.email" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="电话" label-width="120px">
+          <el-input v-model="form.mobile" autocomplete="off"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+      </div>
     </el-dialog>
 
     <!-- table表格 -->
@@ -64,7 +81,7 @@
       <el-table-column label="操作">
         <template slot-scope="scope">
           <!-- 编辑 -->
-          <el-button type="primary" icon="el-icon-edit" circle></el-button>
+          <el-button type="primary" icon="el-icon-edit" @click="updateUser(scope.row.id)" circle></el-button>
           <!-- 删除 -->
           <el-button
             type="danger"
@@ -99,8 +116,14 @@
 <script>
 // 面包屑导航
 import bread from "../../components/bread";
-// 用户数据列表请求 // 添加用户请求 // 修改用户状态 // 删除用户
-import { users, addUsers, userState, deleteUser } from "../../api/http";
+// 用户数据列表请求 // 添加用户请求 // 修改用户状态 // 删除用户 // 查询单个用户
+import {
+  users,
+  addUsers,
+  userState,
+  deleteUser,
+  getByIdUser
+} from "../../api/http";
 export default {
   name: "users",
   data() {
@@ -132,7 +155,15 @@ export default {
       // 每页显示条目个数
       mypageSize: 10,
       // 加载效果
-      loading: false
+      loading: false,
+      // 修改数据
+      dialogFormVisible: false,
+      // 单个用户信息
+      form: {
+        username: "",
+        email: "",
+        mobile: ""
+      }
     };
   },
   methods: {
@@ -219,7 +250,6 @@ export default {
     // 用户状态
     userStateChange(uId, type) {
       uId = +uId;
-      console.log(uId, type);
       userState({ uId, type }).then(res => {
         if (res.data.meta.status !== 200) {
           this.$message({
@@ -251,6 +281,15 @@ export default {
             message: "已取消删除"
           });
         });
+    },
+    // 修改用户
+    updateUser(id) {
+      // 根据id查询用户信息
+      getByIdUser({ id }).then(res => {
+        let { username, email, mobile } = res.data.data;
+        this.form = { username, email, mobile };
+        this.dialogFormVisible = true;
+      });
     }
   },
   components: {

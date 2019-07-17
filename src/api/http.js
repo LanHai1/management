@@ -101,3 +101,8 @@ export const userState = ({ uId, type }) => {
 export const deleteUser = ({ id }) => {
   return http.delete(`users/${id}`);
 };
+
+// 根据id查询用户
+export const getByIdUser = ({ id }) => {
+  return http.get(`users/${id}`);
+};
