@@ -18,10 +18,26 @@
     </el-row>
 
     <!-- table表格 -->
-    <el-table :data="tableData" style="width: 100%" class="my-table">
-      <el-table-column prop="date" label="日期" width="180"></el-table-column>
-      <el-table-column prop="name" label="姓名" width="180"></el-table-column>
-      <el-table-column prop="address" label="地址"></el-table-column>
+    <el-table :data="tableData" style="width: 100%" class="my-table" border>
+      <el-table-column type="index"></el-table-column>
+      <el-table-column prop="username" label="姓名"></el-table-column>
+      <el-table-column prop="email" label="邮箱"></el-table-column>
+      <el-table-column prop="mobile" label="电话"></el-table-column>
+      <el-table-column label="用户状态">
+        <template slot-scope="scope">
+          <el-switch active-color="#13ce66" inactive-color="#ff4949" v-model="scope.row.mg_state"></el-switch>
+        </template>
+      </el-table-column>
+      <el-table-column label="操作">
+        <template>
+          <!-- 编辑 -->
+          <el-button type="primary" icon="el-icon-edit" circle></el-button>
+          <!-- 删除 -->
+          <el-button type="danger" icon="el-icon-delete" circle></el-button>
+          <!-- 分配角色 -->
+          <el-button type="success" icon="el-icon-check" circle></el-button>
+        </template>
+      </el-table-column>
     </el-table>
 
     <!-- 分页 -->
@@ -30,11 +46,11 @@
         <el-pagination
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
-          :current-page="currentPage4"
-          :page-sizes="[100, 200, 300, 400]"
-          :page-size="100"
+          :current-page="pagenum"
+          :page-sizes="[10, 20, 30, 50]"
+          :page-size="mypageSize"
           layout="total, sizes, prev, pager, next, jumper"
-          :total="400"
+          :total="mytotal"
           class="my-pagination"
         ></el-pagination>
       </el-col>
@@ -45,6 +61,8 @@
 <script>
 // 面包屑导航
 import bread from "../../components/bread";
+// 用户数据列表请求
+import { users } from "../../api/http";
 export default {
   name: "users",
   data() {
@@ -52,42 +70,54 @@ export default {
       // 搜索
       search: "",
       // 表格信息
-      tableData: [
-        {
-          date: "2016-05-02",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1518 弄"
-        },
-        {
-          date: "2016-05-04",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1517 弄"
-        },
-        {
-          date: "2016-05-01",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1519 弄"
-        },
-        {
-          date: "2016-05-03",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1516 弄"
-        }
-      ],
+      tableData: [],
       // 当前页码
-      currentPage4: 4
+      pagenum: 1,
+      // 总条数
+      mytotal: 0,
+      // 每页显示条目个数
+      mypageSize: 10
     };
   },
   methods: {
+    // 点击容量
     handleSizeChange(val) {
-      console.log(`每页 ${val} 条`);
+      console.log(this.mytotal, val);
+      // 判断条数是否足够
+      if (val > this.mytotal) {
+        return this.$notify({
+          title: "警告",
+          message: `总数据只有${this.mytotal}条`,
+          type: "warning"
+        });
+      }
+      this.mypageSize = val;
+      this.pagenum = 1;
+      this.getUserData();
     },
+    // 点击页码
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
+      this.pagenum = val;
+      this.getUserData();
+    },
+    // 请求用户列表数据
+    getUserData() {
+      users({
+        query: this.search,
+        pagenum: this.pagenum,
+        pagesize: this.mypageSize
+      }).then(res => {
+        this.tableData = res.data.data.users;
+        // 设置总条数
+        this.mytotal = res.data.data.total;
+      });
     }
   },
   components: {
     bread
+  },
+  created() {
+    this.getUserData();
   }
 };
 </script>

@@ -79,3 +79,10 @@ export const login = ({ username, password }) => {
 export const menus = () => {
   return http.get("menus");
 };
+
+// 用户数据列表
+export const users = ({ query = "", pagenum = 1, pagesize = 10 }) => {
+  return http.get("users", {
+    params: { query, pagenum, pagesize }
+  });
+};
