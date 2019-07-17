@@ -106,3 +106,12 @@ export const deleteUser = ({ id }) => {
 export const getByIdUser = ({ id }) => {
   return http.get(`users/${id}`);
 };
+
+// 修改用户信息
+export const updateUserMsg = ({ id, email, mobile }) => {
+  return http.put(`users/${id}`, {
+    id,
+    email,
+    mobile
+  });
+};

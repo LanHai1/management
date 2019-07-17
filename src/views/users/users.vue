@@ -58,7 +58,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+        <el-button type="primary" @click="updateUserMsg">确 定</el-button>
       </div>
     </el-dialog>
 
@@ -81,7 +81,7 @@
       <el-table-column label="操作">
         <template slot-scope="scope">
           <!-- 编辑 -->
-          <el-button type="primary" icon="el-icon-edit" @click="updateUser(scope.row.id)" circle></el-button>
+          <el-button type="primary" icon="el-icon-edit" @click="queryUser(scope.row.id)" circle></el-button>
           <!-- 删除 -->
           <el-button
             type="danger"
@@ -116,13 +116,20 @@
 <script>
 // 面包屑导航
 import bread from "../../components/bread";
-// 用户数据列表请求 // 添加用户请求 // 修改用户状态 // 删除用户 // 查询单个用户
+
 import {
+  // 用户数据列表请求
   users,
+  // 添加用户请求
   addUsers,
+  // 修改用户状态
   userState,
+  // 删除用户
   deleteUser,
-  getByIdUser
+  // 查询单个用户
+  getByIdUser,
+  // 更新用户信息
+  updateUserMsg
 } from "../../api/http";
 export default {
   name: "users",
@@ -162,7 +169,8 @@ export default {
       form: {
         username: "",
         email: "",
-        mobile: ""
+        mobile: "",
+        id: undefined
       }
     };
   },
@@ -282,13 +290,24 @@ export default {
           });
         });
     },
-    // 修改用户
-    updateUser(id) {
+    // 根据id查询用户信息
+    queryUser(id) {
       // 根据id查询用户信息
       getByIdUser({ id }).then(res => {
-        let { username, email, mobile } = res.data.data;
-        this.form = { username, email, mobile };
+        let { username, email, mobile, id } = res.data.data;
+        this.form = { username, email, mobile, id };
         this.dialogFormVisible = true;
+      });
+    },
+    // 修改用户信息
+    updateUserMsg() {
+      updateUserMsg(this.form).then(res => {
+        // 更新成功
+        if (res.data.meta.status === 200) {
+          this.dialogFormVisible = false;
+        }
+        // 重新获取数据
+        this.getUserData();
       });
     }
   },
