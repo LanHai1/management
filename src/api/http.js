@@ -91,3 +91,8 @@ export const users = ({ query = "", pagenum = 1, pagesize = 10 }) => {
 export const addUsers = ({ username, password, email, mobile }) => {
   return http.post("users", { username, password, email, mobile });
 };
+
+// 修改用户状态
+export const userState = ({ uId, type }) => {
+  return http.put(`users/${uId}/state/${type}`);
+};

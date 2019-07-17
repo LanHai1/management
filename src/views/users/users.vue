@@ -53,7 +53,12 @@
       <el-table-column prop="mobile" label="电话"></el-table-column>
       <el-table-column label="用户状态">
         <template slot-scope="scope">
-          <el-switch active-color="#13ce66" inactive-color="#ff4949" v-model="scope.row.mg_state"></el-switch>
+          <el-switch
+            active-color="#13ce66"
+            inactive-color="#ff4949"
+            @change="userStateChange(scope.row.id,scope.row.mg_state)"
+            v-model="scope.row.mg_state"
+          ></el-switch>
         </template>
       </el-table-column>
       <el-table-column label="操作">
@@ -89,8 +94,8 @@
 <script>
 // 面包屑导航
 import bread from "../../components/bread";
-// 用户数据列表请求 // 添加用户请求
-import { users, addUsers } from "../../api/http";
+// 用户数据列表请求 // 添加用户请求 // 修改用户状态
+import { users, addUsers, userState } from "../../api/http";
 export default {
   name: "users",
   data() {
@@ -109,9 +114,7 @@ export default {
         username: [
           { required: true, message: "请输入用户名称", trigger: "blur" }
         ],
-        password: [
-          { required: true, message: "请填写活动形式", trigger: "blur" }
-        ]
+        password: [{ required: true, message: "请输入密码", trigger: "blur" }]
       },
       // 搜索
       search: "",
@@ -206,6 +209,20 @@ export default {
         // 创建失败 用户名已存在
         this.$message.error(res.data.meta.msg);
         this.loading = false;
+      });
+    },
+    // 用户状态
+    userStateChange(uId, type) {
+      uId = +uId;
+      console.log(uId, type);
+      userState({ uId, type }).then(res => {
+        if (res.data.meta.status !== 200) {
+          this.$message({
+            showClose: true,
+            message: "设置状态错误",
+            type: "error"
+          });
+        }
       });
     }
   },
