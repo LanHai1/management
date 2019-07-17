@@ -5,8 +5,8 @@
     <el-row :gutter="0" type="flex" class="row-bg my-el-row">
       <el-col :span="6">
         <div class="grid-content bg-purple">
-          <el-input placeholder="请输入内容" v-model="search" class="input-with-select">
-            <el-button slot="append" icon="el-icon-search"></el-button>
+          <el-input placeholder="请输入内容" v-model.trim="search" class="input-with-select">
+            <el-button slot="append" icon="el-icon-search" @click="searchUsers"></el-button>
           </el-input>
         </div>
       </el-col>
@@ -82,7 +82,6 @@ export default {
   methods: {
     // 点击容量
     handleSizeChange(val) {
-      console.log(this.mytotal, val);
       // 判断条数是否足够
       if (val > this.mytotal) {
         return this.$notify({
@@ -111,6 +110,10 @@ export default {
         // 设置总条数
         this.mytotal = res.data.data.total;
       });
+    },
+    // 用户搜索
+    searchUsers() {
+      this.getUserData();
     }
   },
   components: {
@@ -118,6 +121,17 @@ export default {
   },
   created() {
     this.getUserData();
+  },
+  watch: {
+    tableData: {
+      deep: true,
+      handler(val) {
+        // 深度监听是否获取到用户数据
+        if (val.length === 0) {
+          this.$message.error("无此用户!");
+        }
+      }
+    }
   }
 };
 </script>
