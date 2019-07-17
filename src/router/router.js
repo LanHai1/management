@@ -19,6 +19,8 @@ import rights from "../views/rights/rights.vue";
 import goods from "../views/goods/goods.vue";
 // 商品管理/商品分类组件
 import categories from "../views/categories/categories.vue";
+// 商品管理/分类参数组件
+import params from "../views/params/params.vue";
 // 订单管理组件
 import orders from "../views/orders/orders.vue";
 const routes = [
@@ -67,6 +69,11 @@ const routes = [
       {
         path: "categories",
         component: categories
+      },
+      // 商品管理/分类参数
+      {
+        path: "params",
+        component: params
       },
       // 订单管理
       {
