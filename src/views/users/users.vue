@@ -1,12 +1,6 @@
 <template>
   <div>
-    <!-- 面包屑导航 -->
-    <el-breadcrumb separator-class="el-icon-arrow-right" class="my-bread">
-      <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-      <el-breadcrumb-item class="my-bread-title-color">用户管理</el-breadcrumb-item>
-      <el-breadcrumb-item class="my-bread-title-color">用户列表</el-breadcrumb-item>
-    </el-breadcrumb>
-
+    <bread oneTitle="用户管理" twoTitle="用户列表"></bread>
     <!-- 搜索 -->
     <el-row :gutter="0" type="flex" class="row-bg my-el-row">
       <el-col :span="6">
@@ -49,6 +43,8 @@
 </template>
 
 <script>
+// 面包屑导航
+import bread from "../../components/bread";
 export default {
   name: "users",
   data() {
@@ -89,6 +85,9 @@ export default {
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
     }
+  },
+  components: {
+    bread
   }
 };
 </script>
