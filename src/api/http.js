@@ -96,3 +96,8 @@ export const addUsers = ({ username, password, email, mobile }) => {
 export const userState = ({ uId, type }) => {
   return http.put(`users/${uId}/state/${type}`);
 };
+
+// 删除用户
+export const deleteUser = ({ id }) => {
+  return http.delete(`users/${id}`);
+};

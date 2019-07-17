@@ -62,11 +62,16 @@
         </template>
       </el-table-column>
       <el-table-column label="操作">
-        <template>
+        <template slot-scope="scope">
           <!-- 编辑 -->
           <el-button type="primary" icon="el-icon-edit" circle></el-button>
           <!-- 删除 -->
-          <el-button type="danger" icon="el-icon-delete" circle></el-button>
+          <el-button
+            type="danger"
+            icon="el-icon-delete"
+            circle
+            @click="deleteRemoveUser(scope.row.id,scope.row.username)"
+          ></el-button>
           <!-- 分配角色 -->
           <el-button type="success" icon="el-icon-check" circle></el-button>
         </template>
@@ -94,8 +99,8 @@
 <script>
 // 面包屑导航
 import bread from "../../components/bread";
-// 用户数据列表请求 // 添加用户请求 // 修改用户状态
-import { users, addUsers, userState } from "../../api/http";
+// 用户数据列表请求 // 添加用户请求 // 修改用户状态 // 删除用户
+import { users, addUsers, userState, deleteUser } from "../../api/http";
 export default {
   name: "users",
   data() {
@@ -224,6 +229,28 @@ export default {
           });
         }
       });
+    },
+    // 删除用户
+    deleteRemoveUser(id, username) {
+      this.$confirm(`确定删除用户“${username}”吗?`, "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          deleteUser({ id }).then(res => {
+            if (res.data.meta.status === 200) {
+              // 重新获取用户列表
+              this.getUserData();
+            }
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除"
+          });
+        });
     }
   },
   components: {
