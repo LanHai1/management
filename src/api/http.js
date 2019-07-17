@@ -120,3 +120,8 @@ export const updateUserMsg = ({ id, email, mobile }) => {
 export const rights = ({ type }) => {
   return http.get(`rights/${type}`);
 };
+
+// 获取角色列表
+export const roles = () => {
+  return http.get("roles");
+};
