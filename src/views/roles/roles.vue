@@ -17,14 +17,14 @@
           <el-form label-position="left" inline class="demo-table-expand">
             <el-row v-for="level1 in props.row.children" :key="level1.id">
               <el-col :span="4">
-                <el-tag closable type>{{ level1.authName }}</el-tag>
+                <el-tag class="level1-row" closable type>{{ level1.authName }}</el-tag>
                 <i class="el-icon-arrow-right"></i>
               </el-col>
               <el-col :span="20">
                 <!-- 二级权限 -->
-                <el-row class="level2-row" v-for="level2 in level1.children" :key="level2.id">
+                <el-row v-for="level2 in level1.children" :key="level2.id">
                   <el-col :span="5">
-                    <el-tag closable type="success">{{ level2.authName }}</el-tag>
+                    <el-tag class="level2-row" closable type="success">{{ level2.authName }}</el-tag>
                     <i class="el-icon-arrow-right"></i>
                   </el-col>
                   <el-col :span="19">
@@ -109,5 +109,13 @@ export default {
 
 .my-table {
   border-radius: 4px;
+}
+
+.level3-row {
+  margin: 0 15px 10px 0;
+}
+.level2-row,
+.level1-row {
+  margin-right: 5px;
 }
 </style>
