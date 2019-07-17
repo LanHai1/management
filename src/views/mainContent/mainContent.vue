@@ -25,7 +25,6 @@
     <el-container class="my-main">
       <el-aside width="200px">
         <el-menu
-          default-active="2"
           class="el-menu-vertical-demo my-menu"
           background-color="#364351"
           text-color="#fff"
@@ -145,7 +144,7 @@ export default {
 
 <style scoped lang="less">
 .my-header {
-  min-width: 380px;
+  min-width: 480px;
   .title {
     float: left;
     font-size: 24px;
@@ -201,6 +200,6 @@ export default {
   margin-left: -70px;
 }
 .my-main {
-  min-width: 380px;
+  min-width: 480px;
 }
 </style>

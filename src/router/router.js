@@ -10,7 +10,9 @@ import login from "../views/login/login.vue";
 // 主页内容模块
 import mainContent from "../views/mainContent/mainContent.vue";
 // 用户管理组件
-import users from "../views/users/users.vue";
+import users from "../views/users/users.vue"; 
+// 权限管理组件
+import roles from "../views/roles/roles.vue";
 const routes = [
   {
     path: "/",
@@ -33,9 +35,15 @@ const routes = [
     },
     // 子路由
     children: [
+      // 用户管理
       {
         path: "users",
         component: users
+      },
+      // 权限管理
+      {
+        path: "roles",
+        component: roles
       }
     ]
   }
