@@ -22,7 +22,9 @@ import categories from "../views/categories/categories.vue";
 // 商品管理/分类参数组件
 import params from "../views/params/params.vue";
 // 订单管理组件
-import orders from "../views/orders/orders.vue";
+import orders from "../views/orders/orders.vue"; 
+// 数据报表组件
+import reports from "../views/reports/reports.vue";
 const routes = [
   {
     path: "/",
@@ -79,6 +81,11 @@ const routes = [
       {
         path: "orders",
         component: orders
+      },
+      // 数据报表
+      {
+        path: "reports",
+        component: reports
       }
     ]
   }
