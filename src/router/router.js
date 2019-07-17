@@ -9,6 +9,8 @@ Vue.use(VueRouter);
 import login from "../views/login/login.vue";
 // 主页内容模块
 import mainContent from "../views/mainContent/mainContent.vue";
+// 用户管理组件
+import users from "../views/users/users.vue";
 const routes = [
   {
     path: "/",
@@ -27,7 +29,14 @@ const routes = [
     // 设置路由元信息
     meta: {
       isValidation: true
-    }
+    },
+    // 子路由
+    children: [
+      {
+        path: "users",
+        component: users
+      }
+    ]
   }
 ];
 

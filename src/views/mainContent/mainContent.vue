@@ -73,7 +73,9 @@
           </el-submenu>
         </el-menu>
       </el-aside>
-      <el-main>Main</el-main>
+      <el-main>
+        <router-view></router-view>
+      </el-main>
     </el-container>
   </el-container>
 </template>
@@ -174,7 +176,7 @@ export default {
 }
 
 .el-main {
-  background-color: #618f78;
+  background-color: #75a98f;
   color: #333;
   text-align: center;
 }
