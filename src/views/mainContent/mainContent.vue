@@ -22,7 +22,7 @@
         </el-col>
       </el-row>
     </el-header>
-    <el-container>
+    <el-container class="my-main">
       <el-aside width="200px">
         <el-menu
           default-active="2"
@@ -33,31 +33,42 @@
           :unique-opened="true"
           :router="true"
         >
-          <el-submenu v-for="(oneMenu, index) in menuList" :key="index" :index="''+index">
+          <el-submenu
+            class="my-menu-li"
+            v-for="(oneMenu, index) in menuList"
+            :key="index"
+            :index="''+index"
+          >
             <template slot="title">
-              <span v-if="oneMenu.id === 125">
-                <i class="el-icon-user"></i>
-              </span>
-              <span v-else-if="oneMenu.id === 103">
-                <i class="el-icon-lock"></i>
-              </span>
-              <span v-else-if="oneMenu.id === 101">
-                <i class="el-icon-goods"></i>
-              </span>
-              <span v-else-if="oneMenu.id === 102">
-                <i class="el-icon-shopping-bag-1"></i>
-              </span>
-              <span v-else-if="oneMenu.id === 145">
-                <i class="el-icon-pie-chart"></i>
-              </span>
-              {{oneMenu.authName}}
+              <div class="my_title_ul">
+                <span v-if="oneMenu.id === 125">
+                  <i class="el-icon-user"></i>
+                </span>
+                <span v-else-if="oneMenu.id === 103">
+                  <i class="el-icon-lock"></i>
+                </span>
+                <span v-else-if="oneMenu.id === 101">
+                  <i class="el-icon-goods"></i>
+                </span>
+                <span v-else-if="oneMenu.id === 102">
+                  <i class="el-icon-shopping-bag-1"></i>
+                </span>
+                <span v-else-if="oneMenu.id === 145">
+                  <i class="el-icon-pie-chart"></i>
+                </span>
+                {{oneMenu.authName}}
+              </div>
             </template>
             <el-menu-item-group>
               <el-menu-item
                 v-for="(towMenu, index) in oneMenu.children"
                 :key="index"
                 :index="'/index/'+towMenu.path"
-              >{{towMenu.authName}}</el-menu-item>
+                class="my_menu-item"
+              >
+                <i class="el-icon-copy-document"></i>
+                {{towMenu.authName}}
+              </el-menu-item>
             </el-menu-item-group>
           </el-submenu>
         </el-menu>
@@ -182,5 +193,12 @@ export default {
   position: relative;
   margin: 0;
   padding-left: 0;
+}
+.my_title_ul {
+  font-size: 14px;
+  margin-left: -70px;
+}
+.my-main {
+  min-width: 380px;
 }
 </style>
