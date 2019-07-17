@@ -50,8 +50,8 @@ http.interceptors.response.use(
       // 重定向回登陆
       router.push("/login");
     }
-    // 数据获取成功提示
     if (response.data.meta.status === 200) {
+      // 数据获取成功提示
       new Vue().$message({
         showClose: true,
         message: response.data.meta.msg,
@@ -85,4 +85,9 @@ export const users = ({ query = "", pagenum = 1, pagesize = 10 }) => {
   return http.get("users", {
     params: { query, pagenum, pagesize }
   });
+};
+
+// 添加用户
+export const addUsers = ({ username, password, email, mobile }) => {
+  return http.post("users", { username, password, email, mobile });
 };

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-loading="loading">
     <bread oneTitle="用户管理" twoTitle="用户列表"></bread>
     <!-- 搜索 -->
     <el-row :gutter="0" type="flex" class="row-bg my-el-row">
@@ -12,10 +12,38 @@
       </el-col>
       <el-col :span="1">
         <div class="grid-content bg-purple-light">
-          <el-button type="success" plain>添加用户</el-button>
+          <el-button type="success" plain @click="dialogVisible = true">添加用户</el-button>
         </div>
       </el-col>
     </el-row>
+
+    <!-- 添加用户组件 -->
+    <el-dialog title="添加用户" :visible.sync="dialogVisible" width="50%" :before-close="handleClose">
+      <el-form
+        :label-position="labelPosition"
+        :rules="rules"
+        label-width="80px"
+        :model="formLabelAlign"
+      >
+        <el-form-item label="用户名" prop="username">
+          <el-input placeholder="请输入用户名" v-model="formLabelAlign.username"></el-input>
+        </el-form-item>
+        <el-form-item label="密码" prop="password">
+          <el-input placeholder="请输入密码" v-model="formLabelAlign.password"></el-input>
+        </el-form-item>
+        <el-form-item label="邮箱">
+          <el-input placeholder="请输入邮箱" v-model="formLabelAlign.email"></el-input>
+        </el-form-item>
+        <el-form-item label="电话">
+          <el-input placeholder="请输入电话" v-model="formLabelAlign.mobile"></el-input>
+        </el-form-item>
+      </el-form>
+
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="addUser">确 定</el-button>
+      </span>
+    </el-dialog>
 
     <!-- table表格 -->
     <el-table :data="tableData" style="width: 100%" class="my-table" border>
@@ -61,12 +89,30 @@
 <script>
 // 面包屑导航
 import bread from "../../components/bread";
-// 用户数据列表请求
-import { users } from "../../api/http";
+// 用户数据列表请求 // 添加用户请求
+import { users, addUsers } from "../../api/http";
 export default {
   name: "users",
   data() {
     return {
+      // 添加用户
+      dialogVisible: false,
+      labelPosition: "right",
+      formLabelAlign: {
+        username: "",
+        password: "",
+        email: "",
+        mobile: ""
+      },
+      // 正则匹配
+      rules: {
+        username: [
+          { required: true, message: "请输入用户名称", trigger: "blur" }
+        ],
+        password: [
+          { required: true, message: "请填写活动形式", trigger: "blur" }
+        ]
+      },
       // 搜索
       search: "",
       // 表格信息
@@ -76,7 +122,9 @@ export default {
       // 总条数
       mytotal: 0,
       // 每页显示条目个数
-      mypageSize: 10
+      mypageSize: 10,
+      // 加载效果
+      loading: false
     };
   },
   methods: {
@@ -114,6 +162,51 @@ export default {
     // 用户搜索
     searchUsers() {
       this.getUserData();
+    },
+    // 添加用户确定关闭?
+    handleClose(done) {
+      this.$confirm("确认关闭？")
+        .then(_ => {
+          done();
+        })
+        .catch(_ => {});
+    },
+    // 添加用户
+    addUser() {
+      const { username, password, email, mobile } = this.formLabelAlign;
+      if (!username || !password) {
+        return this.$notify({
+          title: "提示",
+          message: "请按照输入提示输入信息",
+          position: "bottom-left",
+          duration: 2000
+        });
+      }
+      addUsers({ username, password, email, mobile }).then(res => {
+        this.loading = true;
+        // 创建成功
+        if (res.data.meta.status === 201) {
+          // 延时加载
+          setInterval(() => {
+            this.loading = false;
+          }, 1000);
+          this.$message({
+            message: res.data.meta.msg,
+            type: "success"
+          });
+          this.dialogVisible = false;
+          this.formLabelAlign.username = "";
+          this.formLabelAlign.password = "";
+          this.formLabelAlign.email = "";
+          this.formLabelAlign.mobile = "";
+          // 重新获取数据
+          this.getUserData();
+          return;
+        }
+        // 创建失败 用户名已存在
+        this.$message.error(res.data.meta.msg);
+        this.loading = false;
+      });
     }
   },
   components: {
