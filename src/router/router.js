@@ -10,9 +10,11 @@ import login from "../views/login/login.vue";
 // 主页内容模块
 import mainContent from "../views/mainContent/mainContent.vue";
 // 用户管理组件
-import users from "../views/users/users.vue"; 
-// 权限管理组件
+import users from "../views/users/users.vue";
+// 权限管理/角色列表组件
 import roles from "../views/roles/roles.vue";
+// 权限管理/权限列表组件
+import rights from "../views/rights/rights.vue";
 const routes = [
   {
     path: "/",
@@ -40,10 +42,15 @@ const routes = [
         path: "users",
         component: users
       },
-      // 权限管理
+      // 权限管理/角色列表组件
       {
         path: "roles",
         component: roles
+      },
+      // 权限管理/权限列表组件
+      {
+        path: "rights",
+        component: rights
       }
     ]
   }

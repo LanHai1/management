@@ -1,15 +1,6 @@
 <template>
   <div>
-    <bread oneTitle="权限管理" twoTitle="角色列表"></bread>
-    <!-- 搜索 -->
-    <el-row :gutter="0" type="flex" class="row-bg my-el-row">
-      <el-col :span="1">
-        <div class="grid-content bg-purple-light">
-          <el-button type="success" plain>添加角色</el-button>
-        </div>
-      </el-col>
-    </el-row>
-
+    <bread oneTitle="权限管理" twoTitle="权限列表"></bread>
     <!-- table表格 -->
     <el-table :data="tableData" style="width: 100%" class="my-table">
       <el-table-column prop="date" label="日期" width="180"></el-table-column>
@@ -23,11 +14,9 @@
 // 面包屑导航
 import bread from "../../components/bread";
 export default {
-  name: "roles",
+  name: "rights",
   data() {
     return {
-      // 搜索
-      search: "",
       // 表格信息
       tableData: [
         {
@@ -70,12 +59,8 @@ export default {
     color: #fff !important;
   }
 }
-.my-el-row,
-.my-pagination {
-  margin: 20px 0;
-}
-
 .my-table {
+  margin: 20px 0;
   border-radius: 4px;
 }
 </style>
