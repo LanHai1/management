@@ -61,6 +61,34 @@
         <el-button type="primary" @click="updateUserMsg">确 定</el-button>
       </div>
     </el-dialog>
+    <!-- 分配角色 -->
+    <el-dialog title="分配角色" :visible.sync="distribution">
+      <el-form :model="distForm">
+        <el-row>
+          <el-col :span="6">
+            <el-form-item label="当前用户" label-width="120px">{{distForm.username}}</el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="11">
+            <el-form-item label="请选择角色" label-width="120px">
+              <el-select v-model="distForm.region" placeholder="请选择角色">
+                <el-option
+                  v-for="(item, index) in distForm.option"
+                  :key="index"
+                  :label="item.roleName"
+                  :value="item.id"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="distribution = false">取 消</el-button>
+        <el-button type="primary" @click="distribution = false">确 定</el-button>
+      </div>
+    </el-dialog>
 
     <!-- table表格 -->
     <el-table :data="tableData" style="width: 100%" class="my-table" border>
@@ -90,7 +118,12 @@
             @click="deleteRemoveUser(scope.row.id,scope.row.username)"
           ></el-button>
           <!-- 分配角色 -->
-          <el-button type="success" icon="el-icon-check" circle></el-button>
+          <el-button
+            type="success"
+            icon="el-icon-check"
+            @click="openDist(scope.row.username,scope.row.role_name)"
+            circle
+          ></el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -129,7 +162,9 @@ import {
   // 查询单个用户
   getByIdUser,
   // 更新用户信息
-  updateUserMsg
+  updateUserMsg,
+  // 获取角色列表
+  roles
 } from "../../api/http";
 export default {
   name: "users",
@@ -143,6 +178,13 @@ export default {
         password: "",
         email: "",
         mobile: ""
+      },
+      // 分配角色
+      distribution: false,
+      distForm: {
+        username: "admin",
+        region: "",
+        option: []
       },
       // 正则匹配
       rules: {
@@ -308,6 +350,16 @@ export default {
         }
         // 重新获取数据
         this.getUserData();
+      });
+    },
+    // 分配角色渲染
+    openDist(username, role_name) {
+      this.distForm.username = username;
+      this.distForm.region = role_name;
+      this.distribution = true;
+      roles().then(res => {
+        this.distForm.option = res.data.data;
+        console.log(this.distForm.option);
       });
     }
   },

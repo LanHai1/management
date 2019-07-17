@@ -162,7 +162,7 @@ export default {
 }
 .el-header,
 .el-footer {
-  background-color: #668c8c;
+  background: linear-gradient(-45deg, #81ad96, #313c48);
   color: #333;
   text-align: center;
   line-height: 60px;

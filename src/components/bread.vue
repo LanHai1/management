@@ -32,6 +32,7 @@ export default {
   line-height: 45px;
   padding-left: 15px;
   border-radius: 4px;
+  box-shadow: 0 2px 12px 0 #00000061;
   .el-breadcrumb__inner {
     color: #fff !important;
   }
