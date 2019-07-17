@@ -86,7 +86,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="distribution = false">取 消</el-button>
-        <el-button type="primary" @click="distribution = false">确 定</el-button>
+        <el-button type="primary" @click="roleDist">确 定</el-button>
       </div>
     </el-dialog>
 
@@ -121,7 +121,7 @@
           <el-button
             type="success"
             icon="el-icon-check"
-            @click="openDist(scope.row.username,scope.row.role_name)"
+            @click="openDist(scope.row.username,scope.row.role_name,scope.row.id)"
             circle
           ></el-button>
         </template>
@@ -164,7 +164,9 @@ import {
   // 更新用户信息
   updateUserMsg,
   // 获取角色列表
-  roles
+  roles,
+  // 分配角色
+  role
 } from "../../api/http";
 export default {
   name: "users",
@@ -182,9 +184,10 @@ export default {
       // 分配角色
       distribution: false,
       distForm: {
-        username: "admin",
+        username: "",
         region: "",
-        option: []
+        option: [],
+        id: undefined
       },
       // 正则匹配
       rules: {
@@ -353,13 +356,30 @@ export default {
       });
     },
     // 分配角色渲染
-    openDist(username, role_name) {
+    openDist(username, role_name, id) {
       this.distForm.username = username;
       this.distForm.region = role_name;
+      this.distForm.id = id;
       this.distribution = true;
       roles().then(res => {
         this.distForm.option = res.data.data;
-        console.log(this.distForm.option);
+      });
+    },
+    // 修改分配角色
+    roleDist() {
+      const { id, region } = this.distForm;
+      role({ id, rid: region }).then(res => {
+        if (res.data.meta.status === 200) {
+          // 优化渲染 不重新请求 失败
+          // this.distForm.option.find(val => {
+          //   if (val.id === res.data.data.rid) {
+          //     this.distForm.region = val.roleName;
+          //     this.distribution = false;
+          //   }
+          // });
+          this.getUserData();
+          this.distribution = false;
+        }
       });
     }
   },

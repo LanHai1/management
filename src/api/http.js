@@ -125,3 +125,8 @@ export const rights = ({ type }) => {
 export const roles = () => {
   return http.get("roles");
 };
+
+// 分配角色修改
+export const role = ({ id, rid }) => {
+  return http.put(`users/${id}/role`, { rid });
+};
