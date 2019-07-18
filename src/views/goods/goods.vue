@@ -6,7 +6,7 @@
       <el-col :span="6">
         <div class="grid-content bg-purple">
           <el-input placeholder="请输入内容" v-model.trim="query" clearable class="input-with-select">
-            <el-button slot="append" icon="el-icon-search"></el-button>
+            <el-button slot="append" icon="el-icon-search" @click="searchGood"></el-button>
           </el-input>
         </div>
       </el-col>
@@ -29,7 +29,14 @@
         ></el-pagination>
       </el-col>
     </el-row>
-
+    <!-- 单个商品信息 -->
+    <el-dialog title="商品详情" :visible.sync="oneGood">
+      <el-form></el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="oneGood = false">取 消</el-button>
+        <el-button type="primary" @click="oneGood = false">确 定</el-button>
+      </div>
+    </el-dialog>
     <!-- table表格 -->
     <el-table :data="tableData" style="width: 100%" border class="my-table">
       <el-table-column type="index" width="50"></el-table-column>
@@ -40,7 +47,12 @@
       <el-table-column label="操作">
         <template slot-scope="scope">
           <!-- 编辑 -->
-          <el-button type="primary" icon="el-icon-edit" circle></el-button>
+          <el-button
+            type="primary"
+            icon="el-icon-edit"
+            circle
+            @click="openOneGood(scope.row.goods_id)"
+          ></el-button>
           <!-- 删除 -->
           <el-button
             type="danger"
@@ -53,6 +65,10 @@
     </el-table>
   </div>
 </template>
+      </el-table-column>
+    </el-table>
+  </div>
+</template>
 
 <script>
 // 面包屑导航
@@ -61,7 +77,9 @@ import {
   // 商品列表数据
   goods,
   // 删除商品
-  deleteGood
+  deleteGood,
+  // 根据id查询商品
+  getByIdGood
 } from "../../api/http";
 export default {
   name: "goods",
@@ -76,7 +94,9 @@ export default {
       // 每页显示条数
       pagesize: 10,
       // 总页数
-      total: 0
+      total: 0,
+      // 单个商品区块
+      oneGood: false
     };
   },
   methods: {
@@ -102,7 +122,11 @@ export default {
     // 获取商品列表
     getGoods() {
       const { query, pagenum, pagesize } = this;
-      goods({ query, pagenum, pagesize }).then(res => {
+      goods({
+        query,
+        pagenum,
+        pagesize
+      }).then(res => {
         // 处理时间格式
         res.data.data.goods.map(val => {
           val.add_time = this.$moment(val.add_time).format(
@@ -122,7 +146,9 @@ export default {
         type: "warning"
       })
         .then(() => {
-          deleteGood({ id }).then(res => {
+          deleteGood({
+            id
+          }).then(res => {
             if (res.data.meta.status === 200) {
               this.getGoods();
             }
@@ -134,6 +160,21 @@ export default {
             message: "已取消删除"
           });
         });
+    },
+    // 根据id查询商品
+    openOneGood(id) {
+      // 未完成
+      getByIdGood({
+        id
+      }).then(res => {
+        console.log(res);
+        this.oneGood = true;
+      });
+    },
+    // 查询商品
+    searchGood() {
+      const { query, pagenum, pagesize } = this;
+      this.getGoods();
     }
   },
   components: {

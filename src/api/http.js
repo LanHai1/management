@@ -165,3 +165,8 @@ export const goods = ({ query, pagenum = 1, pagesize = 10 }) => {
 export const deleteGood = ({ id }) => {
   return http.delete(`goods/${id}`);
 };
+
+// 根据id查询商品
+export const getByIdGood = ({ id }) => {
+  return http.get(`goods/${id}`);
+};
