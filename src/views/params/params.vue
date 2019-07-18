@@ -4,7 +4,7 @@
     <!-- 提示 -->
     <el-alert title="注意:只允许为第三级分类设置相关参数!" class="my-alert" type="warning" show-icon></el-alert>
     <!-- 商品分类 -->
-    <el-row>
+    <el-row class="my-fl">
       <el-col :span="6">
         请选择商品分类:
         <el-cascader
@@ -386,12 +386,15 @@ export default {
 
 <style scoped lang="less">
 .my-alert {
-  margin: 20px 0;
+  margin: 20px 0 0 0;
 }
 .my-button {
   margin: 8px 0 20px 0;
 }
 .my-table {
   border-radius: 4px;
+}
+.my-fl {
+  margin: 20px 0 0 0;
 }
 </style>

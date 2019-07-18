@@ -15,6 +15,19 @@
           <el-button type="success" plain @click="dialogVisible = true">添加用户</el-button>
         </div>
       </el-col>
+      <!-- 分页 -->
+      <el-col :span="17">
+        <el-pagination
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="pagenum"
+          :page-sizes="[10, 20, 30, 50]"
+          :page-size="mypageSize"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="mytotal"
+          class="my-pagination"
+        ></el-pagination>
+      </el-col>
     </el-row>
 
     <!-- 添加用户组件 -->
@@ -127,22 +140,6 @@
         </template>
       </el-table-column>
     </el-table>
-
-    <!-- 分页 -->
-    <el-row>
-      <el-col :span="11">
-        <el-pagination
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-          :current-page="pagenum"
-          :page-sizes="[10, 20, 30, 50]"
-          :page-size="mypageSize"
-          layout="total, sizes, prev, pager, next, jumper"
-          :total="mytotal"
-          class="my-pagination"
-        ></el-pagination>
-      </el-col>
-    </el-row>
   </div>
 </template>
 
@@ -414,9 +411,11 @@ export default {
     color: #fff !important;
   }
 }
-.my-el-row,
-.my-pagination {
+.my-el-row {
   margin: 20px 0;
+}
+.my-pagination {
+  float: right;
 }
 .my-table {
   border-radius: 4px;

@@ -2,16 +2,9 @@
   <div>
     <bread oneTitle="订单管理" twoTitle="订单列表"></bread>
 
-    <!-- table表格 -->
-    <el-table :data="tableData" style="width: 100%" class="my-table">
-      <el-table-column prop="date" label="日期" width="180"></el-table-column>
-      <el-table-column prop="name" label="姓名" width="180"></el-table-column>
-      <el-table-column prop="address" label="地址"></el-table-column>
-    </el-table>
-
     <!-- 分页 -->
     <el-row>
-      <el-col :span="11">
+      <el-col :span="24">
         <el-pagination
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
@@ -24,6 +17,13 @@
         ></el-pagination>
       </el-col>
     </el-row>
+
+    <!-- table表格 -->
+    <el-table :data="tableData" style="width: 100%" class="my-table">
+      <el-table-column prop="date" label="日期" width="180"></el-table-column>
+      <el-table-column prop="name" label="姓名" width="180"></el-table-column>
+      <el-table-column prop="address" label="地址"></el-table-column>
+    </el-table>
   </div>
 </template>
 
@@ -86,9 +86,12 @@ export default {
     color: #fff !important;
   }
 }
-.my-el-row,
-.my-pagination {
+.my-el-row {
   margin: 20px 0;
+}
+.my-pagination {
+  float: right;
+  margin: 20px 0 0 0;
 }
 .my-table {
   margin: 20px 0 0 0;
