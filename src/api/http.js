@@ -160,3 +160,8 @@ export const goods = ({ query, pagenum = 1, pagesize = 10 }) => {
     params: { query, pagenum, pagesize }
   });
 };
+
+// 删除商品
+export const deleteGood = ({ id }) => {
+  return http.delete(`goods/${id}`);
+};

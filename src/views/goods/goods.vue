@@ -38,11 +38,16 @@
       <el-table-column prop="goods_weight" label="商品重量" width="80"></el-table-column>
       <el-table-column prop="add_time" label="创建时间"></el-table-column>
       <el-table-column label="操作">
-        <template>
+        <template slot-scope="scope">
           <!-- 编辑 -->
           <el-button type="primary" icon="el-icon-edit" circle></el-button>
           <!-- 删除 -->
-          <el-button type="danger" icon="el-icon-delete" circle></el-button>
+          <el-button
+            type="danger"
+            icon="el-icon-delete"
+            @click="deleteGoods(scope.row.goods_id)"
+            circle
+          ></el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -54,7 +59,9 @@
 import bread from "../../components/bread";
 import {
   // 商品列表数据
-  goods
+  goods,
+  // 删除商品
+  deleteGood
 } from "../../api/http";
 export default {
   name: "goods",
@@ -106,6 +113,27 @@ export default {
         this.pagenum = +res.data.data.pagenum;
         this.total = res.data.data.total;
       });
+    },
+    // 删除商品
+    deleteGoods(id) {
+      this.$confirm("确定删除这个商品吗?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          deleteGood({ id }).then(res => {
+            if (res.data.meta.status === 200) {
+              this.getGoods();
+            }
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除"
+          });
+        });
     }
   },
   components: {
