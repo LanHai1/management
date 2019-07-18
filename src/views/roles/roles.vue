@@ -81,7 +81,7 @@
       { required: true, message: '请输入角色名称'}
     ]"
         >
-          <el-input type="text" v-model.trim="numberValidateForm.roleName" autocomplete="off"></el-input>
+          <el-input type="text" clearable v-model.trim="numberValidateForm.roleName" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item
           label="角色描述"
@@ -90,7 +90,7 @@
       { required: true, message: '请输入角色描述'}
     ]"
         >
-          <el-input type="text" v-model.trim="numberValidateForm.roleDesc" autocomplete="off"></el-input>
+          <el-input type="text" clearable v-model.trim="numberValidateForm.roleDesc" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item>
           <div style="float:right">
@@ -116,7 +116,7 @@
       { required: true, message: '请输入角色名称'}
     ]"
         >
-          <el-input type="text" v-model.trim="updateValidateForm.roleName" autocomplete="off"></el-input>
+          <el-input type="text" clearable v-model.trim="updateValidateForm.roleName" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item
           label="角色描述"
@@ -125,7 +125,7 @@
       { required: true, message: '请输入角色描述'}
     ]"
         >
-          <el-input type="text" v-model.trim="updateValidateForm.roleDesc" autocomplete="off"></el-input>
+          <el-input type="text" clearable v-model.trim="updateValidateForm.roleDesc" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item>
           <div style="float:right">

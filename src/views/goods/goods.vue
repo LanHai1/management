@@ -5,7 +5,7 @@
     <el-row :gutter="0" type="flex" class="row-bg my-el-row">
       <el-col :span="6">
         <div class="grid-content bg-purple">
-          <el-input placeholder="请输入内容" v-model="query" class="input-with-select">
+          <el-input placeholder="请输入内容" v-model.trim="query" clearable class="input-with-select">
             <el-button slot="append" icon="el-icon-search"></el-button>
           </el-input>
         </div>

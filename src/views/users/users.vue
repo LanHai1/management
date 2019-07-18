@@ -5,7 +5,7 @@
     <el-row :gutter="0" type="flex" class="row-bg my-el-row">
       <el-col :span="6">
         <div class="grid-content bg-purple">
-          <el-input placeholder="请输入内容" v-model.trim="search" class="input-with-select">
+          <el-input placeholder="请输入内容" clearable v-model.trim="search" class="input-with-select">
             <el-button slot="append" icon="el-icon-search" @click="searchUsers"></el-button>
           </el-input>
         </div>
@@ -39,16 +39,16 @@
         :model="formLabelAlign"
       >
         <el-form-item label="用户名" prop="username">
-          <el-input placeholder="请输入用户名" v-model="formLabelAlign.username"></el-input>
+          <el-input placeholder="请输入用户名" clearable v-model.trim="formLabelAlign.username"></el-input>
         </el-form-item>
         <el-form-item label="密码" prop="password">
-          <el-input placeholder="请输入密码" v-model="formLabelAlign.password"></el-input>
+          <el-input placeholder="请输入密码" clearable v-model.trim="formLabelAlign.password"></el-input>
         </el-form-item>
         <el-form-item label="邮箱">
-          <el-input placeholder="请输入邮箱" v-model="formLabelAlign.email"></el-input>
+          <el-input placeholder="请输入邮箱" clearable v-model.trim="formLabelAlign.email"></el-input>
         </el-form-item>
         <el-form-item label="电话">
-          <el-input placeholder="请输入电话" v-model="formLabelAlign.mobile"></el-input>
+          <el-input placeholder="请输入电话" clearable v-model.trim="formLabelAlign.mobile"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -60,13 +60,13 @@
     <el-dialog title="修改用户" :visible.sync="dialogFormVisible">
       <el-form :model="form">
         <el-form-item label="用户名" label-width="120px">
-          <el-input :disabled="true" v-model="form.username" autocomplete="off"></el-input>
+          <el-input :disabled="true" clearable v-model.trim="form.username" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="邮箱" label-width="120px">
-          <el-input v-model="form.email" autocomplete="off"></el-input>
+          <el-input v-model.trim="form.email" clearable autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="电话" label-width="120px">
-          <el-input v-model="form.mobile" autocomplete="off"></el-input>
+          <el-input v-model.trim="form.mobile" clearable autocomplete="off"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
