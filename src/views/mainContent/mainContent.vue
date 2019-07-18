@@ -177,7 +177,7 @@ export default {
 .el-main {
   background-color: #597c6a;
   color: #333;
-  text-align: center;
+  // text-align: center;
 }
 
 .main {

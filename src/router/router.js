@@ -22,9 +22,12 @@ import categories from "../views/categories/categories.vue";
 // 商品管理/分类参数组件
 import params from "../views/params/params.vue";
 // 订单管理组件
-import orders from "../views/orders/orders.vue"; 
+import orders from "../views/orders/orders.vue";
 // 数据报表组件
 import reports from "../views/reports/reports.vue";
+
+// 添加商品子组件
+import add from "../views/goods/add/add.vue";
 const routes = [
   {
     path: "/",
@@ -65,7 +68,8 @@ const routes = [
       // 商品管理/商品列表
       {
         path: "goods",
-        component: goods
+        component: goods,
+        children: [{ path: "add", component: add }]
       },
       // 商品管理/商品分类
       {

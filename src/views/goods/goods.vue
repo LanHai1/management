@@ -1,72 +1,71 @@
 <template>
   <div>
     <bread oneTitle="商品管理" twoTitle="商品列表"></bread>
-    <!-- 搜索 -->
-    <el-row :gutter="0" type="flex" class="row-bg my-el-row">
-      <el-col :span="6">
-        <div class="grid-content bg-purple">
-          <el-input placeholder="请输入内容" v-model.trim="query" clearable class="input-with-select">
-            <el-button slot="append" icon="el-icon-search" @click="searchGood"></el-button>
-          </el-input>
+    <div class="goodsMain">
+      <!-- 搜索 -->
+      <el-row :gutter="0" type="flex" class="row-bg my-el-row">
+        <el-col :span="6">
+          <div class="grid-content bg-purple">
+            <el-input placeholder="请输入内容" v-model.trim="query" clearable class="input-with-select">
+              <el-button slot="append" icon="el-icon-search" @click="searchGood"></el-button>
+            </el-input>
+          </div>
+        </el-col>
+        <el-col :span="1">
+          <div class="grid-content bg-purple-light">
+            <el-button type="success" plain @click="addLinkGood">添加商品</el-button>
+          </div>
+        </el-col>
+        <!-- 分页 -->
+        <el-col :span="17">
+          <el-pagination
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :current-page="pagenum"
+            :page-sizes="[10, 20, 30, 40]"
+            :page-size="pagesize"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="total"
+            class="my-pagination"
+          ></el-pagination>
+        </el-col>
+      </el-row>
+      <!-- 单个商品信息 -->
+      <el-dialog title="商品详情" :visible.sync="oneGood">
+        <el-form></el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="oneGood = false">取 消</el-button>
+          <el-button type="primary" @click="oneGood = false">确 定</el-button>
         </div>
-      </el-col>
-      <el-col :span="1">
-        <div class="grid-content bg-purple-light">
-          <el-button type="success" plain>添加商品</el-button>
-        </div>
-      </el-col>
-      <!-- 分页 -->
-      <el-col :span="17">
-        <el-pagination
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-          :current-page="pagenum"
-          :page-sizes="[10, 20, 30, 40]"
-          :page-size="pagesize"
-          layout="total, sizes, prev, pager, next, jumper"
-          :total="total"
-          class="my-pagination"
-        ></el-pagination>
-      </el-col>
-    </el-row>
-    <!-- 单个商品信息 -->
-    <el-dialog title="商品详情" :visible.sync="oneGood">
-      <el-form></el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="oneGood = false">取 消</el-button>
-        <el-button type="primary" @click="oneGood = false">确 定</el-button>
-      </div>
-    </el-dialog>
-    <!-- table表格 -->
-    <el-table :data="tableData" style="width: 100%" border class="my-table">
-      <el-table-column type="index" width="50"></el-table-column>
-      <el-table-column prop="goods_name" label="商品名称" width="580"></el-table-column>
-      <el-table-column prop="goods_price" label="商品价格(元)" width="100"></el-table-column>
-      <el-table-column prop="goods_weight" label="商品重量" width="80"></el-table-column>
-      <el-table-column prop="add_time" label="创建时间"></el-table-column>
-      <el-table-column label="操作">
-        <template slot-scope="scope">
-          <!-- 编辑 -->
-          <el-button
-            type="primary"
-            icon="el-icon-edit"
-            circle
-            @click="openOneGood(scope.row.goods_id)"
-          ></el-button>
-          <!-- 删除 -->
-          <el-button
-            type="danger"
-            icon="el-icon-delete"
-            @click="deleteGoods(scope.row.goods_id)"
-            circle
-          ></el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-  </div>
-</template>
-      </el-table-column>
-    </el-table>
+      </el-dialog>
+      <!-- table表格 -->
+      <el-table :data="tableData" style="width: 100%" border class="my-table">
+        <el-table-column type="index" width="50"></el-table-column>
+        <el-table-column prop="goods_name" label="商品名称" width="580"></el-table-column>
+        <el-table-column prop="goods_price" label="商品价格(元)" width="100"></el-table-column>
+        <el-table-column prop="goods_weight" label="商品重量" width="80"></el-table-column>
+        <el-table-column prop="add_time" label="创建时间"></el-table-column>
+        <el-table-column label="操作">
+          <template slot-scope="scope">
+            <!-- 编辑 -->
+            <el-button
+              type="primary"
+              icon="el-icon-edit"
+              circle
+              @click="openOneGood(scope.row.goods_id)"
+            ></el-button>
+            <!-- 删除 -->
+            <el-button
+              type="danger"
+              icon="el-icon-delete"
+              @click="deleteGoods(scope.row.goods_id)"
+              circle
+            ></el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <router-view></router-view>
+    </div>
   </div>
 </template>
 
@@ -175,6 +174,10 @@ export default {
     searchGood() {
       const { query, pagenum, pagesize } = this;
       this.getGoods();
+    },
+    // 添加商品
+    addLinkGood() {
+      this.$router.push("goods/add");
     }
   },
   components: {
@@ -205,5 +208,8 @@ export default {
 }
 .my-table {
   border-radius: 4px;
+}
+.goodsMain {
+  position: relative;
 }
 </style>
