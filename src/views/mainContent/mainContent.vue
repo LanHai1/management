@@ -169,7 +169,7 @@ export default {
 }
 
 .el-aside {
-  background-color: #586572;
+  background: linear-gradient(-45deg, #597c6a, #1a2e44);
   color: #333;
   text-align: center;
 }

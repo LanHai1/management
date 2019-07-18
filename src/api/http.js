@@ -147,10 +147,16 @@ export const getByIdRole = ({ id }) => {
 };
 
 // 编辑提交角色
-export const updateRole = ({id,roleName,roleDesc})=>{
+export const updateRole = ({ id, roleName, roleDesc }) => {
   return http.put(`roles/${id}`, {
     roleName,
     roleDesc
   });
-}
+};
 
+// 商品列表数据
+export const goods = ({ query, pagenum = 1, pagesize = 10 }) => {
+  return http.get("goods", {
+    params: { query, pagenum, pagesize }
+  });
+};

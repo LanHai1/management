@@ -5,7 +5,7 @@
     <el-row :gutter="0" type="flex" class="row-bg my-el-row">
       <el-col :span="6">
         <div class="grid-content bg-purple">
-          <el-input placeholder="请输入内容" v-model="search" class="input-with-select">
+          <el-input placeholder="请输入内容" v-model="query" class="input-with-select">
             <el-button slot="append" icon="el-icon-search"></el-button>
           </el-input>
         </div>
@@ -18,10 +18,20 @@
     </el-row>
 
     <!-- table表格 -->
-    <el-table :data="tableData" style="width: 100%" class="my-table">
-      <el-table-column prop="date" label="日期" width="180"></el-table-column>
-      <el-table-column prop="name" label="姓名" width="180"></el-table-column>
-      <el-table-column prop="address" label="地址"></el-table-column>
+    <el-table :data="tableData" style="width: 100%" border class="my-table">
+      <el-table-column type="index" width="50"></el-table-column>
+      <el-table-column prop="goods_name" label="商品名称" width="580"></el-table-column>
+      <el-table-column prop="goods_price" label="商品价格(元)" width="100"></el-table-column>
+      <el-table-column prop="goods_weight" label="商品重量" width="80"></el-table-column>
+      <el-table-column prop="add_time" label="创建时间"></el-table-column>
+      <el-table-column label="操作">
+        <template>
+          <!-- 编辑 -->
+          <el-button type="primary" icon="el-icon-edit" circle></el-button>
+          <!-- 删除 -->
+          <el-button type="danger" icon="el-icon-delete" circle></el-button>
+        </template>
+      </el-table-column>
     </el-table>
 
     <!-- 分页 -->
@@ -30,11 +40,11 @@
         <el-pagination
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
-          :current-page="currentPage4"
-          :page-sizes="[100, 200, 300, 400]"
-          :page-size="100"
+          :current-page="pagenum"
+          :page-sizes="[10, 20, 30, 40]"
+          :page-size="pagesize"
           layout="total, sizes, prev, pager, next, jumper"
-          :total="400"
+          :total="total"
           class="my-pagination"
         ></el-pagination>
       </el-col>
@@ -45,49 +55,67 @@
 <script>
 // 面包屑导航
 import bread from "../../components/bread";
+import {
+  // 商品列表数据
+  goods
+} from "../../api/http";
 export default {
   name: "goods",
   data() {
     return {
       // 搜索
-      search: "",
+      query: "",
       // 表格信息
-      tableData: [
-        {
-          date: "2016-05-02",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1518 弄"
-        },
-        {
-          date: "2016-05-04",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1517 弄"
-        },
-        {
-          date: "2016-05-01",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1519 弄"
-        },
-        {
-          date: "2016-05-03",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1516 弄"
-        }
-      ],
+      tableData: [],
       // 当前页码
-      currentPage4: 4
+      pagenum: 1,
+      // 每页显示条数
+      pagesize: 10,
+      // 总页数
+      total: 0
     };
   },
   methods: {
+    // 页容量改变触发
     handleSizeChange(val) {
-      console.log(`每页 ${val} 条`);
+      // 判断条数是否足够
+      if (val > this.total) {
+        return this.$notify({
+          title: "警告",
+          message: `总数据只有${this.total}条`,
+          type: "warning"
+        });
+      }
+      this.pagesize = val;
+      this.pagenum = 1;
+      this.getGoods();
     },
+    // 当前页改变触发
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
+      this.pagenum = val;
+      this.getGoods();
+    },
+    // 获取商品列表
+    getGoods() {
+      const { query, pagenum, pagesize } = this;
+      goods({ query, pagenum, pagesize }).then(res => {
+        // 处理时间格式
+        res.data.data.goods.map(val => {
+          val.add_time = this.$moment(val.add_time).format(
+            "YYYY-DD-MM HH:mm:ss"
+          );
+        });
+        this.tableData = res.data.data.goods;
+        this.pagenum = +res.data.data.pagenum;
+        this.total = res.data.data.total;
+      });
     }
   },
   components: {
     bread
+  },
+  created() {
+    this.getGoods();
   }
 };
 </script>
