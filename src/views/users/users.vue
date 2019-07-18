@@ -5,7 +5,13 @@
     <el-row :gutter="0" type="flex" class="row-bg my-el-row">
       <el-col :span="6">
         <div class="grid-content bg-purple">
-          <el-input placeholder="请输入内容" clearable v-model.trim="search" class="input-with-select">
+          <el-input
+            placeholder="请输入内容"
+            clearable
+            v-model.trim="search"
+            @keyup.enter.native="searchUsers"
+            class="input-with-select"
+          >
             <el-button slot="append" icon="el-icon-search" @click="searchUsers"></el-button>
           </el-input>
         </div>
@@ -42,7 +48,7 @@
           <el-input placeholder="请输入用户名" clearable v-model.trim="formLabelAlign.username"></el-input>
         </el-form-item>
         <el-form-item label="密码" prop="password">
-          <el-input placeholder="请输入密码" clearable v-model.trim="formLabelAlign.password"></el-input>
+          <el-input placeholder="请输入密码" show-password clearable v-model.trim="formLabelAlign.password"></el-input>
         </el-form-item>
         <el-form-item label="邮箱">
           <el-input placeholder="请输入邮箱" clearable v-model.trim="formLabelAlign.email"></el-input>
