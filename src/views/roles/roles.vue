@@ -5,7 +5,7 @@
     <el-row :gutter="0" type="flex" class="row-bg my-el-row">
       <el-col :span="1">
         <div class="grid-content bg-purple-light">
-          <el-button type="success" plain @click="openRole">添加角色</el-button>
+          <el-button type="success" plain @click="addRole = true">添加角色</el-button>
         </div>
       </el-col>
     </el-row>
@@ -52,7 +52,7 @@
       <el-table-column label="操作">
         <template slot-scope="scope">
           <!-- 编辑 -->
-          <el-button type="primary" icon="el-icon-edit" circle></el-button>
+          <el-button type="primary" icon="el-icon-edit" @click="getByIdRoles(scope.row.id)" circle></el-button>
           <!-- 删除 -->
           <el-button
             type="danger"
@@ -100,6 +100,41 @@
         </el-form-item>
       </el-form>
     </el-dialog>
+
+    <!-- 修改角色 -->
+    <el-dialog title="修改角色" :visible.sync="updateRole">
+      <el-form
+        :model="updateValidateForm"
+        ref="updateValidateForm"
+        label-width="100px"
+        class="demo-ruleForm"
+      >
+        <el-form-item
+          label="角色名称"
+          prop="roleName"
+          :rules="[
+      { required: true, message: '请输入角色名称'}
+    ]"
+        >
+          <el-input type="text" v-model.trim="updateValidateForm.roleName" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item
+          label="角色描述"
+          prop="roleDesc"
+          :rules="[
+      { required: true, message: '请输入角色描述'}
+    ]"
+        >
+          <el-input type="text" v-model.trim="updateValidateForm.roleDesc" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <div style="float:right">
+            <el-button type="primary" @click="updatesubmitFormRole('updateValidateForm')">确定</el-button>
+            <el-button @click="resetFormRole('updateValidateForm')">取消</el-button>
+          </div>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
   </div>
 </template>
 
@@ -112,7 +147,11 @@ import {
   // 删除角色
   deleteRole,
   // 添加角色
-  addRole
+  addRole,
+  // 根据id查询角色
+  getByIdRole,
+  // 编辑提交角色
+  updateRole
 } from "../../api/http";
 export default {
   name: "roles",
@@ -129,6 +168,15 @@ export default {
         roleName: "",
         // 角色描述
         roleDesc: ""
+      },
+      // 更新角色
+      updateRole: false,
+      updateValidateForm: {
+        // 角色名称
+        roleName: "",
+        // 角色描述
+        roleDesc: "",
+        id: undefined
       }
     };
   },
@@ -166,10 +214,6 @@ export default {
           });
         });
     },
-    // 打开添加角色
-    openRole() {
-      this.addRole = true;
-    },
     // 添加角色
     submitFormRole(formName) {
       this.$refs[formName].validate(valid => {
@@ -193,10 +237,44 @@ export default {
         }
       });
     },
-    // 取消添加角色 重置
+    // 取消添加/更新角色 重置
     resetFormRole(formName) {
       this.$refs[formName].resetFields();
       this.addRole = false;
+      this.updateRole = false;
+    },
+    // 根据id查询角色
+    getByIdRoles(id) {
+      getByIdRole({ id }).then(res => {
+        if (res.data.meta.status === 200) {
+          const { roleName, roleDesc, roleId } = res.data.data;
+          this.updateValidateForm = { roleName, roleDesc, id: roleId };
+          this.updateRole = true;
+        }
+      });
+    },
+    // 更新角色
+    updatesubmitFormRole(formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          const { id, roleName, roleDesc } = this.updateValidateForm;
+          updateRole({ id, roleName, roleDesc }).then(res => {
+            if (res.data.meta.status === 200) {
+              this.getroles();
+              this.updateRole = false;
+            }
+          });
+        } else {
+          // 提示输入错误
+          this.$notify({
+            title: "提示",
+            message: "请按照要求填写",
+            position: "top-left",
+            duration: 2000
+          });
+          return false;
+        }
+      });
     }
   }
 };

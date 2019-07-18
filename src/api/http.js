@@ -140,3 +140,17 @@ export const deleteRole = ({ id }) => {
 export const addRole = ({ roleName, roleDesc }) => {
   return http.post("roles", { roleName, roleDesc });
 };
+
+// 根据id查找角色
+export const getByIdRole = ({ id }) => {
+  return http.get(`roles/${id}`);
+};
+
+// 编辑提交角色
+export const updateRole = ({id,roleName,roleDesc})=>{
+  return http.put(`roles/${id}`, {
+    roleName,
+    roleDesc
+  });
+}
+
