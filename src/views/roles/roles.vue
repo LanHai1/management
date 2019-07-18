@@ -50,11 +50,16 @@
       <el-table-column label="角色名称" prop="roleName"></el-table-column>
       <el-table-column label="角色描述" prop="roleDesc"></el-table-column>
       <el-table-column label="操作">
-        <template>
+        <template slot-scope="scope">
           <!-- 编辑 -->
           <el-button type="primary" icon="el-icon-edit" circle></el-button>
           <!-- 删除 -->
-          <el-button type="danger" icon="el-icon-delete" circle></el-button>
+          <el-button
+            type="danger"
+            icon="el-icon-delete"
+            circle
+            @click="deleteRoles(scope.row.id,scope.row.roleName)"
+          ></el-button>
           <!-- 分配角色 -->
           <el-button type="success" icon="el-icon-check" circle></el-button>
         </template>
@@ -68,7 +73,9 @@
 import bread from "../../components/bread";
 import {
   // 获取角色列表
-  roles
+  roles,
+  // 删除角色
+  deleteRole
 } from "../../api/http";
 export default {
   name: "roles",
@@ -84,9 +91,36 @@ export default {
     bread
   },
   created() {
-    roles().then(res => {
-      this.tableData = res.data.data;
-    });
+    this.getroles();
+  },
+  methods: {
+    // 获取角色信息
+    getroles() {
+      roles().then(res => {
+        this.tableData = res.data.data;
+      });
+    },
+    // 删除角色
+    deleteRoles(id, roleName) {
+      this.$confirm(`确定删除${roleName}角色吗?`, "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          deleteRole({ id }).then(res => {
+            if (res.data.meta.status === 200) {
+              this.getroles();
+            }
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除"
+          });
+        });
+    }
   }
 };
 </script>

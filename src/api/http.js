@@ -130,3 +130,8 @@ export const roles = () => {
 export const role = ({ id, rid }) => {
   return http.put(`users/${id}/role`, { rid });
 };
+
+// 删除角色
+export const deleteRole = ({ id }) => {
+  return http.delete(`roles/${id}`);
+};
