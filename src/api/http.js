@@ -135,3 +135,8 @@ export const role = ({ id, rid }) => {
 export const deleteRole = ({ id }) => {
   return http.delete(`roles/${id}`);
 };
+
+// 添加角色
+export const addRole = ({ roleName, roleDesc }) => {
+  return http.post("roles", { roleName, roleDesc });
+};

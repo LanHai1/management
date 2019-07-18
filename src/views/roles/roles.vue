@@ -5,7 +5,7 @@
     <el-row :gutter="0" type="flex" class="row-bg my-el-row">
       <el-col :span="1">
         <div class="grid-content bg-purple-light">
-          <el-button type="success" plain>添加角色</el-button>
+          <el-button type="success" plain @click="openRole">添加角色</el-button>
         </div>
       </el-col>
     </el-row>
@@ -65,6 +65,41 @@
         </template>
       </el-table-column>
     </el-table>
+
+    <!-- 添加角色 -->
+    <el-dialog title="添加角色" :visible.sync="addRole">
+      <el-form
+        :model="numberValidateForm"
+        ref="numberValidateForm"
+        label-width="100px"
+        class="demo-ruleForm"
+      >
+        <el-form-item
+          label="角色名称"
+          prop="roleName"
+          :rules="[
+      { required: true, message: '请输入角色名称'}
+    ]"
+        >
+          <el-input type="text" v-model.trim="numberValidateForm.roleName" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item
+          label="角色描述"
+          prop="roleDesc"
+          :rules="[
+      { required: true, message: '请输入角色描述'}
+    ]"
+        >
+          <el-input type="text" v-model.trim="numberValidateForm.roleDesc" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <div style="float:right">
+            <el-button type="primary" @click="submitFormRole('numberValidateForm')">确定</el-button>
+            <el-button @click="resetFormRole('numberValidateForm')">取消</el-button>
+          </div>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
   </div>
 </template>
 
@@ -75,7 +110,9 @@ import {
   // 获取角色列表
   roles,
   // 删除角色
-  deleteRole
+  deleteRole,
+  // 添加角色
+  addRole
 } from "../../api/http";
 export default {
   name: "roles",
@@ -84,7 +121,15 @@ export default {
       // 搜索
       search: "",
       // 表格信息
-      tableData: []
+      tableData: [],
+      // 添加角色
+      addRole: false,
+      numberValidateForm: {
+        // 角色名称
+        roleName: "",
+        // 角色描述
+        roleDesc: ""
+      }
     };
   },
   components: {
@@ -120,6 +165,38 @@ export default {
             message: "已取消删除"
           });
         });
+    },
+    // 打开添加角色
+    openRole() {
+      this.addRole = true;
+    },
+    // 添加角色
+    submitFormRole(formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          const { roleName, roleDesc } = this.numberValidateForm;
+          addRole({ roleName, roleDesc }).then(res => {
+            if (res.data.meta.status === 201) {
+              this.getroles();
+              this.addRole = false;
+            }
+          });
+        } else {
+          // 提示输入错误
+          this.$notify({
+            title: "提示",
+            message: "请按照要求填写",
+            position: "top-left",
+            duration: 2000
+          });
+          return false;
+        }
+      });
+    },
+    // 取消添加角色 重置
+    resetFormRole(formName) {
+      this.$refs[formName].resetFields();
+      this.addRole = false;
     }
   }
 };
