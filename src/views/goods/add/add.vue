@@ -57,6 +57,7 @@
           :on-preview="handlePictureCardPreview"
           :on-remove="handleRemove"
           style="float:left"
+          :file-list="information.pics"
         >
           <i class="el-icon-plus"></i>
         </el-upload>
@@ -109,7 +110,9 @@ export default {
         // 商品分类
         goods_cat: [],
         // 介绍
-        goods_introduce: ""
+        goods_introduce: "",
+        // 商品图片
+        pics: []
       },
       // 正则
       rules: {
@@ -151,6 +154,7 @@ export default {
     handlePictureCardPreview(file) {
       this.dialogImageUrl = file.url;
       this.dialogVisible = true;
+      console.log(this.dialogImageUrl);
     },
     // tab 点击事件
     tabsClick(val) {
