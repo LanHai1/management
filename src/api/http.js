@@ -170,3 +170,12 @@ export const deleteGood = ({ id }) => {
 export const getByIdGood = ({ id }) => {
   return http.get(`goods/${id}`);
 };
+
+// 商品数据列表
+export const categories = ({ type }) => {
+  return http.get("categories", {
+    params: {
+      type
+    }
+  });
+};

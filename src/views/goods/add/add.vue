@@ -11,14 +11,15 @@
       <el-step class="is-process-my" title="商品内容"></el-step>
     </el-steps>
     <!-- tabs -->
-    <el-tabs tab-position="left" style=" margin:20px">
-      <el-tab-pane label="基本信息">
+    <el-tabs tab-position="left" @tab-click="tabsClick" v-model="activeName" style="margin:20px">
+      <el-tab-pane label="基本信息" name="first">
         <el-form
           label-position="top"
           class="myForm"
           :rules="rules"
           label-width="80px"
           :model="information"
+          ref="information"
         >
           <el-form-item label="商品名称" prop="goods_name">
             <el-input class="my-input" v-model.trim="information.goods_name"></el-input>
@@ -36,17 +37,19 @@
             <el-cascader
               v-model="information.goods_cat"
               :options="options"
-              :props="{ expandTrigger: 'hover' }"
+              expand-trigger="hover"
+              :props="{ label: 'cat_name', value: 'cat_id' }"
               @change="handleChange"
               style="float:left;width:300px"
-              placeholder="请选择商品分类"
+              placeholder="试试搜索"
+              filterable
             ></el-cascader>
           </el-form-item>
         </el-form>
       </el-tab-pane>
       <!-- <el-tab-pane label="商品参数">商品参数</el-tab-pane>
       <el-tab-pane label="商品属性">商品属性</el-tab-pane>-->
-      <el-tab-pane label="商品图片">
+      <el-tab-pane label="商品图片" name="second">
         <!-- 上传图片 -->
         <el-upload
           action="https://jsonplaceholder.typicode.com/posts/"
@@ -61,7 +64,7 @@
           <img width="100%" :src="dialogImageUrl" alt />
         </el-dialog>
       </el-tab-pane>
-      <el-tab-pane label="商品内容">
+      <el-tab-pane label="商品内容" name="third">
         <el-button type="primary" class="btn-tj-my">添加商品</el-button>
         <!-- 富文本 -->
         <quillEditor v-model="information.goods_introduce"></quillEditor>
@@ -77,12 +80,22 @@ import "quill/dist/quill.snow.css";
 import "quill/dist/quill.bubble.css";
 
 import { quillEditor } from "vue-quill-editor";
+
+import {
+  // 商品数据列表
+  categories
+} from "../../../api/http";
+
 export default {
   name: "add",
   data() {
     return {
       // 步骤条
       active: 0,
+      // tabs
+      activeName: "first",
+      // 表单验证
+      isFormOk: true,
       // 基本信息
       information: {
         // 商品名称
@@ -115,274 +128,8 @@ export default {
         ],
         goods_cat: [{ required: true, message: "商品分类不能为空" }]
       },
-      options: [
-        {
-          value: "zhinan",
-          label: "指南",
-          children: [
-            {
-              value: "shejiyuanze",
-              label: "设计原则",
-              children: [
-                {
-                  value: "yizhi",
-                  label: "一致"
-                },
-                {
-                  value: "fankui",
-                  label: "反馈"
-                },
-                {
-                  value: "xiaolv",
-                  label: "效率"
-                },
-                {
-                  value: "kekong",
-                  label: "可控"
-                }
-              ]
-            },
-            {
-              value: "daohang",
-              label: "导航",
-              children: [
-                {
-                  value: "cexiangdaohang",
-                  label: "侧向导航"
-                },
-                {
-                  value: "dingbudaohang",
-                  label: "顶部导航"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          value: "zujian",
-          label: "组件",
-          children: [
-            {
-              value: "basic",
-              label: "Basic",
-              children: [
-                {
-                  value: "layout",
-                  label: "Layout 布局"
-                },
-                {
-                  value: "color",
-                  label: "Color 色彩"
-                },
-                {
-                  value: "typography",
-                  label: "Typography 字体"
-                },
-                {
-                  value: "icon",
-                  label: "Icon 图标"
-                },
-                {
-                  value: "button",
-                  label: "Button 按钮"
-                }
-              ]
-            },
-            {
-              value: "form",
-              label: "Form",
-              children: [
-                {
-                  value: "radio",
-                  label: "Radio 单选框"
-                },
-                {
-                  value: "checkbox",
-                  label: "Checkbox 多选框"
-                },
-                {
-                  value: "input",
-                  label: "Input 输入框"
-                },
-                {
-                  value: "input-number",
-                  label: "InputNumber 计数器"
-                },
-                {
-                  value: "select",
-                  label: "Select 选择器"
-                },
-                {
-                  value: "cascader",
-                  label: "Cascader 级联选择器"
-                },
-                {
-                  value: "switch",
-                  label: "Switch 开关"
-                },
-                {
-                  value: "slider",
-                  label: "Slider 滑块"
-                },
-                {
-                  value: "time-picker",
-                  label: "TimePicker 时间选择器"
-                },
-                {
-                  value: "date-picker",
-                  label: "DatePicker 日期选择器"
-                },
-                {
-                  value: "datetime-picker",
-                  label: "DateTimePicker 日期时间选择器"
-                },
-                {
-                  value: "upload",
-                  label: "Upload 上传"
-                },
-                {
-                  value: "rate",
-                  label: "Rate 评分"
-                },
-                {
-                  value: "form",
-                  label: "Form 表单"
-                }
-              ]
-            },
-            {
-              value: "data",
-              label: "Data",
-              children: [
-                {
-                  value: "table",
-                  label: "Table 表格"
-                },
-                {
-                  value: "tag",
-                  label: "Tag 标签"
-                },
-                {
-                  value: "progress",
-                  label: "Progress 进度条"
-                },
-                {
-                  value: "tree",
-                  label: "Tree 树形控件"
-                },
-                {
-                  value: "pagination",
-                  label: "Pagination 分页"
-                },
-                {
-                  value: "badge",
-                  label: "Badge 标记"
-                }
-              ]
-            },
-            {
-              value: "notice",
-              label: "Notice",
-              children: [
-                {
-                  value: "alert",
-                  label: "Alert 警告"
-                },
-                {
-                  value: "loading",
-                  label: "Loading 加载"
-                },
-                {
-                  value: "message",
-                  label: "Message 消息提示"
-                },
-                {
-                  value: "message-box",
-                  label: "MessageBox 弹框"
-                },
-                {
-                  value: "notification",
-                  label: "Notification 通知"
-                }
-              ]
-            },
-            {
-              value: "navigation",
-              label: "Navigation",
-              children: [
-                {
-                  value: "menu",
-                  label: "NavMenu 导航菜单"
-                },
-                {
-                  value: "tabs",
-                  label: "Tabs 标签页"
-                },
-                {
-                  value: "breadcrumb",
-                  label: "Breadcrumb 面包屑"
-                },
-                {
-                  value: "dropdown",
-                  label: "Dropdown 下拉菜单"
-                },
-                {
-                  value: "steps",
-                  label: "Steps 步骤条"
-                }
-              ]
-            },
-            {
-              value: "others",
-              label: "Others",
-              children: [
-                {
-                  value: "dialog",
-                  label: "Dialog 对话框"
-                },
-                {
-                  value: "tooltip",
-                  label: "Tooltip 文字提示"
-                },
-                {
-                  value: "popover",
-                  label: "Popover 弹出框"
-                },
-                {
-                  value: "card",
-                  label: "Card 卡片"
-                },
-                {
-                  value: "carousel",
-                  label: "Carousel 走马灯"
-                },
-                {
-                  value: "collapse",
-                  label: "Collapse 折叠面板"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          value: "ziyuan",
-          label: "资源",
-          children: [
-            {
-              value: "axure",
-              label: "Axure Components"
-            },
-            {
-              value: "sketch",
-              label: "Sketch Templates"
-            },
-            {
-              value: "jiaohu",
-              label: "组件交互文档"
-            }
-          ]
-        }
-      ],
+      // 商品分类
+      options: [],
       // 上传图片
       dialogImageUrl: "",
       dialogVisible: false,
@@ -404,10 +151,44 @@ export default {
     handlePictureCardPreview(file) {
       this.dialogImageUrl = file.url;
       this.dialogVisible = true;
+    },
+    // tab 点击事件
+    tabsClick(val) {
+      // 步骤条和tab联动
+      this.active = +val.index;
+      // 表单验证
+      this.submitGoods("information");
+      if (!this.isFormOk) {
+        this.$notify({
+          title: "提示",
+          message: "商品基本信息请按要求填写",
+          position: "top-left",
+          duration: 5000
+        });
+        this.active = 0;
+      }
+    },
+    // 商品表单验证
+    submitGoods(formName) {
+      this.$refs[formName].validate(valid => {
+        // 未按要求输入
+        if (valid) {
+          this.isFormOk = true;
+        } else {
+          this.isFormOk = false;
+          return false;
+        }
+      });
     }
   },
   components: {
     quillEditor
+  },
+  created() {
+    // 获取商品分类列表
+    categories({ type: [1, 2, 3] }).then(res => {
+      this.options = res.data.data;
+    });
   }
 };
 </script>
@@ -434,6 +215,6 @@ export default {
 }
 
 .btn-tj-my {
-    margin-bottom: 20px;
-  }
+  margin-bottom: 20px;
+}
 </style>

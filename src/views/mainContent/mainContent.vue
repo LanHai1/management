@@ -178,6 +178,7 @@ export default {
   background-color: #597c6a;
   color: #333;
   // text-align: center;
+  min-width: 1111px;
 }
 
 .main {
