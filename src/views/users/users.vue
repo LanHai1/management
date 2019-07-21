@@ -48,7 +48,12 @@
           <el-input placeholder="请输入用户名" clearable v-model.trim="formLabelAlign.username"></el-input>
         </el-form-item>
         <el-form-item label="密码" prop="password">
-          <el-input placeholder="请输入密码" show-password clearable v-model.trim="formLabelAlign.password"></el-input>
+          <el-input
+            placeholder="请输入密码"
+            show-password
+            clearable
+            v-model.trim="formLabelAlign.password"
+          ></el-input>
         </el-form-item>
         <el-form-item label="邮箱">
           <el-input placeholder="请输入邮箱" clearable v-model.trim="formLabelAlign.email"></el-input>
@@ -353,9 +358,14 @@ export default {
         // 更新成功
         if (res.data.meta.status === 200) {
           this.dialogFormVisible = false;
+          // 优化不渲染
+          this.tableData.find(val => {
+            if (val.id == this.form.id) {
+              val.mobile = this.form.mobile;
+              val.username = this.form.username;
+            }
+          });
         }
-        // 重新获取数据
-        this.getUserData();
       });
     },
     // 分配角色渲染

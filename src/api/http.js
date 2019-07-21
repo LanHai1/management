@@ -179,3 +179,12 @@ export const categories = ({ type }) => {
     }
   });
 };
+
+// 分类参数管理参数列表
+export const categoriesList = ({ id, sel }) => {
+  return http.get(`categories/${id}/attributes`, {
+    params: {
+      sel
+    }
+  });
+};

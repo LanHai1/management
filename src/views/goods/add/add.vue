@@ -54,10 +54,12 @@
         <el-upload
           action="https://jsonplaceholder.typicode.com/posts/"
           list-type="picture-card"
+          :headers="uploadHeaders"
           :on-preview="handlePictureCardPreview"
           :on-remove="handleRemove"
           style="float:left"
           :file-list="information.pics"
+          :on-success="imghandleSuccess"
         >
           <i class="el-icon-plus"></i>
         </el-upload>
@@ -136,6 +138,11 @@ export default {
       // 上传图片
       dialogImageUrl: "",
       dialogVisible: false,
+      // 上传图片时候的请求头
+      uploadHeaders: {
+        // 注意：必须这么写
+        Authorization: localStorage.getItem("token")
+      },
       // 富文本编辑器
       content: {
         ops: []
@@ -148,8 +155,15 @@ export default {
       console.log(value);
     },
     // 上传图片
+    // 删除上传的图片
     handleRemove(file, fileList) {
       console.log(file, fileList);
+    },
+    // 上传图片成功
+    imghandleSuccess(file, fileList) {
+      console.log(file, fileList);
+    //   this.information.pics.push({ pic: fileList.url });
+    //   console.log(this.information.pics);
     },
     handlePictureCardPreview(file) {
       this.dialogImageUrl = file.url;
