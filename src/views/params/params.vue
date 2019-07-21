@@ -76,10 +76,14 @@
           </el-table-column>
         </el-table>
       </el-tab-pane>
-      <el-tab-pane label="静态参数" name="second">
+      <el-tab-pane label="静态参数" name="1">
         <el-row>
           <el-col :span="2">
-            <el-button type="primary" class="my-button" disabled>添加静态参数</el-button>
+            <el-button
+              type="primary"
+              class="my-button"
+              :disabled="tableData.length==0?true:false"
+            >添加静态参数</el-button>
           </el-col>
         </el-row>
         <!-- 静态参数表格 -->
@@ -91,9 +95,14 @@
           class="my-table"
         >
           <el-table-column type="index" width="50"></el-table-column>
-          <!-- <el-table-column property="date" label="日期" width="120"></el-table-column>
-          <el-table-column property="name" label="姓名" width="120"></el-table-column>
-          <el-table-column property="address" label="地址"></el-table-column>-->
+          <el-table-column property="attr_name" label="属性名称" width="320"></el-table-column>
+          <el-table-column property="attr_vals" label="属性值" width="320"></el-table-column>
+          <el-table-column property="name" label="操作">
+            <template>
+              <el-button type="primary" icon="el-icon-edit" circle></el-button>
+              <el-button type="danger" icon="el-icon-delete" circle></el-button>
+            </template>
+          </el-table-column>
         </el-table>
       </el-tab-pane>
     </el-tabs>
@@ -142,6 +151,7 @@ export default {
     // 分类改变
     handleChange(value) {
       this.categoriesId = value[value.length - 1];
+      this.activeName = "first";
       this.getMany({ id: this.categoriesId, sel: "many" });
     },
     // 获取动态/静态参数
@@ -153,8 +163,15 @@ export default {
       });
     },
     // tabs点击事件
-    handleClick(tab, event) {
-      console.log(tab, event);
+    handleClick(tab) {
+      if (tab.index == 0) {
+        this.tableData = [];
+        this.getMany({ id: this.categoriesId, sel: "many" });
+      }
+      if (tab.index == 1) {
+        this.tableData = [];
+        this.getMany({ id: this.categoriesId, sel: "only" });
+      }
     },
     // tag
     myTagHandleClose(tag) {
